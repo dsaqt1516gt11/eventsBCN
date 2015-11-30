@@ -41,6 +41,7 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(2, name);
             stmt.setString(3, password);
             stmt.setString(4, email);
+            //PONER IMAGEN
             stmt.executeUpdate();
 
             stmt.close();
