@@ -14,7 +14,7 @@
     ]
   },
   {
-    "path": "groups",
+    "path": "events",
     "methods": ["GET"]
   },
   {

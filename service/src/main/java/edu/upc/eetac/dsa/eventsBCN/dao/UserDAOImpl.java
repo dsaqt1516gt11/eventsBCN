@@ -15,7 +15,8 @@ import java.sql.SQLException;
  */
 public class UserDAOImpl implements UserDAO {
     @Override
-    public User createUser(String name, String password, String email) throws SQLException, UserAlreadyExistsException{
+    public User createUser(String name, String password, String email, String photo) throws SQLException, UserAlreadyExistsException{
+        System.out.println("Estoy dentro de UserDAOImpl\n\n\n\n");
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
@@ -41,11 +42,11 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(2, name);
             stmt.setString(3, password);
             stmt.setString(4, email);
-            //PONER IMAGEN
+            stmt.setString(5, photo);
             stmt.executeUpdate();
 
             stmt.close();
-            stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE);
+            stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE_REGISTERED);
             stmt.setString(1, id);
             stmt.executeUpdate();
 
@@ -64,18 +65,15 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserById(String id) throws SQLException{
+        System.out.println("Estoy dentro de UserDAOImpl\n\n\n\n");
         // Modelo a devolver
         User user = null;
 
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
-            // Obtiene la conexión del DataSource
             connection = Database.getConnection();
-
-            // Prepara la consulta
             stmt = connection.prepareStatement(UserDAOQuery.GET_USER_BY_ID);
-            // Da valor a los parámetros de la consulta
             stmt.setString(1, id);
 
             // Ejecuta la consulta
