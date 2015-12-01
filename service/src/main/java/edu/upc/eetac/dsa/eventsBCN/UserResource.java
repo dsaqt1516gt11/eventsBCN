@@ -20,22 +20,18 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
-<<<<<<< HEAD
-    public Response registerUser(@FormParam("name") String name, @FormParam("password") String password, @FormParam("email") String email , @FormParam("photo") String photo, @Context UriInfo uriInfo) throws URISyntaxException {
-=======
+
     public Response registerUser(@FormParam("name") String name, @FormParam("password") String password, @FormParam("email") String email, @FormParam("photo") String photo, @Context UriInfo uriInfo) throws URISyntaxException {
->>>>>>> 71d87bb62c5f23540828b900ad3862ce199ab430
+
         if (name == null || password == null || email == null)
             throw new BadRequestException("all parameters are mandatory");
         UserDAO userDAO = new UserDAOImpl();
         User user = null;
         AuthToken authenticationToken = null;
         try {
-<<<<<<< HEAD
-            user = userDAO.createUser(name, password, email, photo);
-=======
+
             user = userDAO.createUser(name, password, email,photo);
->>>>>>> 71d87bb62c5f23540828b900ad3862ce199ab430
+
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {
             throw new WebApplicationException("Name already exists", Response.Status.CONFLICT);

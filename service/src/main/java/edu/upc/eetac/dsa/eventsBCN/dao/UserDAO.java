@@ -8,11 +8,7 @@ import java.sql.SQLException;
  * Created by Aitor on 24/10/15.
  */
 public interface UserDAO {
-<<<<<<< HEAD
     public User createUser(String name, String password, String email, String photo)  throws SQLException, UserAlreadyExistsException;
-=======
-    public User createUser(String name, String password, String email, String photo) throws SQLException, UserAlreadyExistsException;
->>>>>>> 71d87bb62c5f23540828b900ad3862ce199ab430
 
     public User getUserById(String id) throws SQLException;
 

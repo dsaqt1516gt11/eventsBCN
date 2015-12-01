@@ -16,10 +16,8 @@ import java.sql.SQLException;
 public class UserDAOImpl implements UserDAO {
     @Override
     public User createUser(String name, String password, String email, String photo) throws SQLException, UserAlreadyExistsException{
-<<<<<<< HEAD
+
         System.out.println("Estoy dentro de UserDAOImpl\n\n\n\n");
-=======
->>>>>>> 71d87bb62c5f23540828b900ad3862ce199ab430
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
@@ -45,11 +43,8 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(2, name);
             stmt.setString(3, password);
             stmt.setString(4, email);
-<<<<<<< HEAD
             stmt.setString(5, photo);
-=======
-            stmt.setString(5,photo);
->>>>>>> 71d87bb62c5f23540828b900ad3862ce199ab430
+
             stmt.executeUpdate();
 
             stmt.close();
