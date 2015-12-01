@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public class UserDAOImpl implements UserDAO {
     @Override
-    public User createUser(String name, String password, String email) throws SQLException, UserAlreadyExistsException{
+    public User createUser(String name, String password, String email, String photo) throws SQLException, UserAlreadyExistsException{
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
@@ -41,12 +41,13 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(2, name);
             stmt.setString(3, password);
             stmt.setString(4, email);
-            //PONER IMAGEN
+            stmt.setString(5,photo);
             stmt.executeUpdate();
 
             stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE);
             stmt.setString(1, id);
+            stmt.setString(2,"registered");
             stmt.executeUpdate();
 
             connection.commit();
