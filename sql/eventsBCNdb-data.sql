@@ -10,4 +10,7 @@ insert into user_roles (userid, role) values (UNHEX('DBBFDC7D737411E588E7001C42B
 insert into users (id, name, password, email,photo) values (UNHEX('DDFEC26C737411E588E7001C42B86E50'), 'empresa2', UNHEX(MD5('empresa2')), 'empresa2@eventsbcn.com','http://www.mendozapost.com/files/image/7/7142/54b6f4c45797b_1420_!.jpg?s=270345070aa93e05e936c1b6f31c0904&d=1421508947');
 insert into user_roles (userid, role) values (UNHEX('DDFEC26C737411E588E7001C42B86E50'),'company');
 
+insert into companies (id, name, description,location,coordinate,userid) values (UNHEX('05EB861C42E700E588DDFEC26C737411'), 'empresa1', 'la empresa numero 1', 'Campus Nord',geomfromtext('point(47.65100 -122.34900)'),UNHEX('DBBFDC7D737411E588E7001C42B86E50'));
+insert into companies (id, name, description,location,coordinate,userid) values (UNHEX('56EB861C42E700E588DDFEC26C737411'), 'empresa2', 'la empresa numero 2', 'Campus Sud',geomfromtext('point(49.65100 -142.34900)'),UNHEX('DDFEC26C737411E588E7001C42B86E50'));
+
 
