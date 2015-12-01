@@ -1,3 +1,0 @@
-create user 'eventsbcn'@'localhost' identified by 'eventsbcn';
-grant all privileges on eventsbcndb.* to 'eventsbcn'@'localhost';
-flush privileges;
