@@ -26,9 +26,9 @@
     ]
   },
   {
-    "path": "(?i)users/([0-9a-f]{32})?",
+    "path": "users/search",
     "methods": [
-      "DELETE"
+      "GET"
     ]
   }
 ]

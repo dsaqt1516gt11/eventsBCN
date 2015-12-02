@@ -19,18 +19,18 @@ import java.util.List;
 @Path("users")
 public class UserResource {
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
-    public Response registerUser(@FormParam("name") String name, @FormParam("password") String password, @FormParam("email") String email, @FormParam("photo") String photo, @FormParam("categories") List<String> categories, @Context UriInfo uriInfo) throws URISyntaxException {
-
-        if (name == null || password == null || email == null || photo ==null || categories==null)
+    public Response registerUser(User user, @Context UriInfo uriInfo) throws URISyntaxException {
+        System.out.println(user.getCategories());
+        if (user==null)
             throw new BadRequestException("all parameters are mandatory");
         UserDAO userDAO = new UserDAOImpl();
-        User user = null;
+        User u = null;
         AuthToken authenticationToken = null;
         try {
 
-            user = userDAO.createUser(name, password, email, photo, categories);
+            u = userDAO.createUser(user);
 
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {
@@ -60,10 +60,12 @@ public class UserResource {
     }
 
 
-    @Path("?search={name}")
+    @Path("/search")
     @GET
-    public User getUserbyName(@PathParam("name") String name) {
+    @Produces(EventsBCNMediaType.EVENTSBCN_USER)
+    public User getUserbyName(@QueryParam("name") String name) {
         System.out.println("Estamos dentro!!!!");
+        System.out.println(name);
         User user = null;
         try {
             user = (new UserDAOImpl()).getUserByName(name);
@@ -74,6 +76,7 @@ public class UserResource {
             throw new NotFoundException("User with name = " + name + " doesn't exist");
         return user;
     }
+
 
     @Context
     private SecurityContext securityContext;
@@ -86,6 +89,7 @@ public class UserResource {
             throw new BadRequestException("entity is null");
         if(!id.equals(user.getId()))
             throw new BadRequestException("path parameter id and entity parameter id doesn't match");
+        System.out.println("PELELEEEEEEE!!!!");
 
         String userid = securityContext.getUserPrincipal().getName();
         if(!userid.equals(id))
@@ -93,7 +97,7 @@ public class UserResource {
 
         UserDAO userDAO = new UserDAOImpl();
         try {
-            user = userDAO.updateProfile(userid, user.getName(), user.getEmail());
+            user = userDAO.updateProfile(userid, user.getName(), user.getEmail(), user.getPhoto(), user.getCategories());
             if(user == null)
                 throw new NotFoundException("User with id = "+id+" doesn't exist");
         } catch (SQLException e) {

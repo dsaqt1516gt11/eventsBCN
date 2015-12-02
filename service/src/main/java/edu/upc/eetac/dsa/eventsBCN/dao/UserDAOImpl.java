@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 /**
@@ -18,14 +19,14 @@ import java.util.Scanner;
  */
 public class UserDAOImpl implements UserDAO {
     @Override
-    public User createUser(String name, String password, String email, String photo, List<String> categories) throws SQLException, UserAlreadyExistsException{
+    public User createUser(User user) throws SQLException, UserAlreadyExistsException{
         System.out.println("Estoy dentro de createUser");
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
         try {
-            User user = getUserByName(name);
-            if (user != null)
+            User u = getUserByName(user.getName());
+            if (u != null)
                 throw new UserAlreadyExistsException();
             System.out.println("De vuelta a createUser");
             connection = Database.getConnection();
@@ -33,35 +34,37 @@ public class UserDAOImpl implements UserDAO {
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next())
-                id = rs.getString(1);
+                user.setId(rs.getString(1));
             else
                 throw new SQLException();
 
             connection.setAutoCommit(false);
             stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.CREATE_USER);
-            stmt.setString(1, id);
-            stmt.setString(2, name);
-            stmt.setString(3, password);
-            stmt.setString(4, email);
-            stmt.setString(5, photo);
+            stmt.setString(1, user.getId());
+            stmt.setString(2, user.getName());
+            stmt.setString(3, user.getPassword());
+            stmt.setString(4, user.getEmail());
+            stmt.setString(5, user.getPhoto());
             stmt.executeUpdate();
             System.out.println("Usuario creado");
 
             stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE_REGISTERED);
-            stmt.setString(1, id);
+            stmt.setString(1, user.getId());
             stmt.executeUpdate();
             System.out.println("Rol asignado");
 
             stmt.close();
-            Iterator<String> it = categories.iterator();
-            while (it.hasNext()){
+
+            for (String nombre : user.getCategories())
+            {
                 stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
-                stmt.setString(1, id);
-                stmt.setString(2, it.next());
+                stmt.setString(1, user.getId());
+                stmt.setString(2, nombre);
+                stmt.executeUpdate();
             }
-            stmt.executeUpdate();
+
             System.out.println("relaciones usuario categorias creadas");
 
             connection.commit();
@@ -74,7 +77,7 @@ public class UserDAOImpl implements UserDAO {
                 connection.close();
             }
         }
-        return getUserByName(name);
+        return getUserByName(user.getName());
     }
 
     @Override
@@ -152,7 +155,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User updateProfile(String id, String name, String email) throws SQLException {
+    public User updateProfile(String id, String name, String email, String photo, List<String> categories) throws SQLException {
         User user = null;
 
         Connection connection = null;
@@ -164,6 +167,7 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(1, id);
             stmt.setString(2, name);
             stmt.setString(3, email);
+            stmt.setString(4, photo);
 
             int rows = stmt.executeUpdate();
             if (rows == 1)
