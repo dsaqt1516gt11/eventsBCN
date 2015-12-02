@@ -9,15 +9,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by Aitor on 24/10/15.
  */
 public class UserDAOImpl implements UserDAO {
     @Override
-    public User createUser(String name, String password, String email, String photo) throws SQLException, UserAlreadyExistsException{
-
-        System.out.println("Estoy dentro de UserDAOImpl\n\n\n\n");
+    public User createUser(String name, String password, String email, String photo, List<String> categories) throws SQLException, UserAlreadyExistsException{
+        System.out.println("Estoy dentro de createUser");
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
@@ -25,7 +27,7 @@ public class UserDAOImpl implements UserDAO {
             User user = getUserByName(name);
             if (user != null)
                 throw new UserAlreadyExistsException();
-
+            System.out.println("De vuelta a createUser");
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
@@ -36,7 +38,6 @@ public class UserDAOImpl implements UserDAO {
                 throw new SQLException();
 
             connection.setAutoCommit(false);
-
             stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.CREATE_USER);
             stmt.setString(1, id);
@@ -44,14 +45,24 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(3, password);
             stmt.setString(4, email);
             stmt.setString(5, photo);
-
             stmt.executeUpdate();
+            System.out.println("Usuario creado");
 
             stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE_REGISTERED);
             stmt.setString(1, id);
-            stmt.setString(2,"registered");
             stmt.executeUpdate();
+            System.out.println("Rol asignado");
+
+            stmt.close();
+            Iterator<String> it = categories.iterator();
+            while (it.hasNext()){
+                stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
+                stmt.setString(1, id);
+                stmt.setString(2, it.next());
+            }
+            stmt.executeUpdate();
+            System.out.println("relaciones usuario categorias creadas");
 
             connection.commit();
         } catch (SQLException e) {
@@ -68,7 +79,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserById(String id) throws SQLException{
-        System.out.println("Estoy dentro de UserDAOImpl\n\n\n\n");
+        System.out.println("Estoy dentro de getUserById");
         // Modelo a devolver
         User user = null;
 
@@ -106,29 +117,37 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserByName(String name) throws SQLException{
+        System.out.println("Estoy dentro de getUserByName");
+        // Modelo a devolver
         User user = null;
 
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
             connection = Database.getConnection();
-
             stmt = connection.prepareStatement(UserDAOQuery.GET_USER_BY_NAME);
             stmt.setString(1, name);
 
+            // Ejecuta la consulta
             ResultSet rs = stmt.executeQuery();
+
+            // Procesa los resultados
             if (rs.next()) {
                 user = new User();
                 user.setId(rs.getString("id"));
-                user.setName(rs.getString("loginid"));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setPhoto(rs.getString("photo"));
             }
         } catch (SQLException e) {
+            // Relanza la excepción
             throw e;
         } finally {
+            // Libera la conexión
             if (stmt != null) stmt.close();
             if (connection != null) connection.close();
         }
-
+        // Devuelve el modelo
         return user;
     }
 

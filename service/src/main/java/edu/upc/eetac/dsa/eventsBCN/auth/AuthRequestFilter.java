@@ -17,21 +17,22 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Created by Aitor on 25/10/15.
+ * Created by Aitor on 10/10/15.
  */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthRequestFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        final boolean secure = requestContext.getUriInfo().getAbsolutePath().getScheme().equals("https");
-
         if(Authorized.getInstance().isAuthorized(requestContext))
             return;
 
+        final boolean secure = requestContext.getUriInfo().getAbsolutePath().getScheme().equals("https");
+        
         String token = requestContext.getHeaderString("X-Auth-Token");
         if (token == null)
             throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+
 
         try {
             final UserInfo principal = (new AuthTokenDAOImpl()).getUserByAuthToken(token);
@@ -65,3 +66,4 @@ public class AuthRequestFilter implements ContainerRequestFilter {
         }
     }
 }
+

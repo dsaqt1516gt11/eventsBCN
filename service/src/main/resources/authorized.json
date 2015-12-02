@@ -9,9 +9,7 @@
   },
   {
     "path": "(?i)users/([0-9a-f]{32})?",
-    "methods": [
-      "GET"
-    ]
+    "methods": ["GET"]
   },
   {
     "path": "events",

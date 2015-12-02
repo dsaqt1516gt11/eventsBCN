@@ -18,6 +18,7 @@ public class User {
     private String password;
     private String email;
     private String photo;
+    private String[] categories;
 
     public List<Link> getLinks() {
         return links;
@@ -65,5 +66,13 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String[] getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String[] categories) {
+        this.categories = categories;
     }
 }
