@@ -51,6 +51,22 @@ public class EventResource {
     }
 
     @Path("/{id}")
+    @GET
+    @Produces(EventsBCNMediaType.EVENTSBCN_EVENT)
+    public Event getEvent(@PathParam("id") String id){
+        Event event = null;
+        EventDAO eventDAO = new EventDAOImpl();
+        try {
+            event = eventDAO.getEventById(id);
+            if(event == null)
+                throw new NotFoundException("Sting with id = "+id+" doesn't exist");
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        return event;
+    }
+
+    @Path("/{id}")
     @PUT
     @Consumes(EventsBCNMediaType.EVENTSBCN_EVENT)
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT)
