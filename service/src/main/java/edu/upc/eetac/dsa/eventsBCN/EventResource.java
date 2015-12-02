@@ -59,7 +59,7 @@ public class EventResource {
         try {
             event = eventDAO.getEventById(id);
             if(event == null)
-                throw new NotFoundException("Sting with id = "+id+" doesn't exist");
+                throw new NotFoundException("Event with id = "+id+" doesn't exist");
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
