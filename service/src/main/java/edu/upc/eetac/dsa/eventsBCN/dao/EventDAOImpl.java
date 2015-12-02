@@ -18,6 +18,7 @@ public class EventDAOImpl implements EventDAO {
         try {
             connection = Database.getConnection();
 
+
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next())
@@ -35,6 +36,7 @@ public class EventDAOImpl implements EventDAO {
             stmt.setString(7, companyid);
             stmt.executeUpdate();
         } catch (SQLException e) {
+
             throw e;
         } finally {
             if (stmt != null) stmt.close();
@@ -64,12 +66,13 @@ public class EventDAOImpl implements EventDAO {
                 event.setId(rs.getString("id"));
                 event.setTitle(rs.getString("title"));
                 event.setDescription(rs.getString("description"));
-                event.setDate(rs.getTimestamp("date").getTime());
+                event.setDate(rs.getString("date"));
                 event.setPhoto(rs.getString("photo"));
                 event.setCategory(rs.getString("category"));
                 event.setCompanyid(rs.getString("companyid"));
                 event.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
                 event.setLastModified(rs.getTimestamp("last_modified").getTime());
+
             }
         } catch (SQLException e) {
             throw e;
@@ -78,6 +81,46 @@ public class EventDAOImpl implements EventDAO {
             if (connection != null) connection.close();
         }
         return event;
+    }
+
+    @Override
+    public EventCollection getEvents() throws SQLException{
+
+        EventCollection eventCollection = new EventCollection();
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        try {
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS);
+
+
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                Event event = new Event();
+                event.setId(rs.getString("id"));
+                event.setTitle(rs.getString("title"));
+                event.setDescription(rs.getString("description"));
+                event.setDate(rs.getString("date"));
+                event.setPhoto(rs.getString("photo"));
+                event.setCategory(rs.getString("category"));
+                event.setCompanyid(rs.getString("companyid"));
+                event.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+                event.setLastModified(rs.getTimestamp("last_modified").getTime());
+                eventCollection.setOldestTimestamp(event.getLastModified());
+                eventCollection.getEvents().add(event);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+        return eventCollection;
     }
 
     @Override
@@ -102,7 +145,7 @@ public class EventDAOImpl implements EventDAO {
                 event.setId(rs.getString("id"));
                 event.setTitle(rs.getString("title"));
                 event.setDescription(rs.getString("description"));
-                event.setDate(rs.getTimestamp("date").getTime());
+                event.setDate(rs.getString("date"));
                 event.setPhoto(rs.getString("photo"));
                 event.setCategory(rs.getString("category"));
                 event.setCompanyid(rs.getString("companyid"));
@@ -143,7 +186,7 @@ public class EventDAOImpl implements EventDAO {
                 event.setId(rs.getString("id"));
                 event.setTitle(rs.getString("title"));
                 event.setDescription(rs.getString("description"));
-                event.setDate(rs.getTimestamp("date").getTime());
+                event.setDate(rs.getString("date"));
                 event.setPhoto(rs.getString("photo"));
                 event.setCategory(rs.getString("category"));
                 event.setCompanyid(rs.getString("companyid"));

@@ -17,7 +17,7 @@ public class Event {
     private String id;
     private String title;
     private String description;
-    private long date;
+    private String date;
     private String photo;
     private String category;
     private String companyid;
@@ -57,11 +57,11 @@ public class Event {
         this.description = description;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

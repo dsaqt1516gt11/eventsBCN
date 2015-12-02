@@ -20,5 +20,17 @@
   {
     "path": "login",
     "methods": ["POST"]
+  },
+  {
+    "path": "(?i)events/([0-9a-f]{32})?",
+    "methods": [
+      "PUT"
+    ]
+  },
+  {
+    "path": "(?i)users/([0-9a-f]{32})?",
+    "methods": [
+      "DELETE"
+    ]
   }
 ]
