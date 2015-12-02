@@ -11,6 +11,7 @@ import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by Aitor on 25/10/15.
@@ -20,17 +21,16 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
+    public Response registerUser(@FormParam("name") String name, @FormParam("password") String password, @FormParam("email") String email, @FormParam("photo") String photo, @FormParam("categories") List<String> categories, @Context UriInfo uriInfo) throws URISyntaxException {
 
-    public Response registerUser(@FormParam("name") String name, @FormParam("password") String password, @FormParam("email") String email, @FormParam("photo") String photo, @Context UriInfo uriInfo) throws URISyntaxException {
-
-        if (name == null || password == null || email == null)
+        if (name == null || password == null || email == null || photo ==null || categories==null)
             throw new BadRequestException("all parameters are mandatory");
         UserDAO userDAO = new UserDAOImpl();
         User user = null;
         AuthToken authenticationToken = null;
         try {
 
-            user = userDAO.createUser(name, password, email,photo);
+            user = userDAO.createUser(name, password, email, photo, categories);
 
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {
@@ -39,8 +39,10 @@ public class UserResource {
             throw new InternalServerErrorException();
         }
         URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + user.getId());
+        System.out.println("torna el token a l'usuari:" + uri);
         return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN).entity(authenticationToken).build();
     }
+
 
     @Path("/{id}")
     @GET
@@ -57,10 +59,11 @@ public class UserResource {
         return user;
     }
 
-    @Path("?search={id}")
+
+    @Path("?search={name}")
     @GET
-    @Produces(EventsBCNMediaType.EVENTSBCN_USER)
     public User getUserbyName(@PathParam("name") String name) {
+        System.out.println("Estamos dentro!!!!");
         User user = null;
         try {
             user = (new UserDAOImpl()).getUserByName(name);

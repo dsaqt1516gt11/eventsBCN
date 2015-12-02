@@ -69,7 +69,7 @@ public class AuthTokenDAOImpl implements AuthTokenDAO {
             stmt = connection.prepareStatement(AuthTokenDAOQuery.CREATE_TOKEN);
             stmt.setString(1, userid);
             stmt.setString(2, token);
-
+            System.out.println("Userid:" + userid + "token:" + token + "\n\n\n\n\n");
             stmt.executeUpdate();
 
             authToken = new AuthToken();

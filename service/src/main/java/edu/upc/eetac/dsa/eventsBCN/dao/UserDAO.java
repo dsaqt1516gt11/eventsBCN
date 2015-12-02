@@ -3,12 +3,13 @@ package edu.upc.eetac.dsa.eventsBCN.dao;
 import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Created by Aitor on 24/10/15.
  */
 public interface UserDAO {
-    public User createUser(String name, String password, String email, String photo)  throws SQLException, UserAlreadyExistsException;
+    public User createUser(String name, String password, String email, String photo, List<String> categories)  throws SQLException, UserAlreadyExistsException;
 
     public User getUserById(String id) throws SQLException;
 

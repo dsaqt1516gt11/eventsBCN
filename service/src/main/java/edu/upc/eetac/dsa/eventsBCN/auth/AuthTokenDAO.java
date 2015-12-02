@@ -5,7 +5,7 @@ import edu.upc.eetac.dsa.eventsBCN.entity.AuthToken;
 import java.sql.SQLException;
 
 /**
- * Created by Aitor on 24/10/15.
+ * Created by Aitor on 9/10/15.
  */
 public interface AuthTokenDAO {
     public UserInfo getUserByAuthToken(String token) throws SQLException;
