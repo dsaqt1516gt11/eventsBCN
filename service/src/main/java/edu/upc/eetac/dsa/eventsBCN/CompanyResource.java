@@ -1,10 +1,11 @@
 package edu.upc.eetac.dsa.eventsBCN;
 
+import edu.upc.eetac.dsa.eventsBCN.dao.*;
+import edu.upc.eetac.dsa.eventsBCN.entity.Company;
+import edu.upc.eetac.dsa.eventsBCN.entity.Event;
+
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -14,7 +15,40 @@ import java.sql.SQLException;
  */
 @Path("companies")
 public class CompanyResource {
+    //Probar
+    private SecurityContext securityContext;
+    @Path("/{id_company}/events/{id_event}/assist")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public void assistEvent(@PathParam("id_company") String idcompany,@PathParam("id_event") String idevent){
 
 
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        EventDAO eventDAO = new EventDAOImpl();
+        Event event = null;
+        Company company = null;
+        try {
+            company = companyDAO.getCompanyById(idcompany);
+            event = eventDAO.getEventById(idevent);
+            if(company==null)
+                throw new NotFoundException("Company with id = "+idcompany+" doesn't exist");
+            else if(event==null)
+                throw new NotFoundException("Event with id = "+idevent+" doesn't exist");
+            else{
+                String userid = securityContext.getUserPrincipal().getName();
+                try {
+                    companyDAO.assisttoEvent(userid, idevent);
+                }
+                catch (UserAlreadyAssisttoEvent e){
+                    throw new ForbiddenException();
+                }
+            }
+
+
+        }
+        catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+    }
 
 }
