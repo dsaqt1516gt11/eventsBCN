@@ -96,7 +96,7 @@ public class EventResource {
         try {
 
             if(!eventDAO.deleteEvent(id))
-                throw new NotFoundException("Sting with id = "+id+" doesn't exist");
+                throw new NotFoundException("Event with id = "+id+" doesn't exist");
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
