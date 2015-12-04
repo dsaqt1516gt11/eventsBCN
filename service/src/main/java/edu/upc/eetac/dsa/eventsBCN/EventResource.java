@@ -14,27 +14,8 @@ import java.sql.SQLException;
 /**
  * Created by juan on 1/12/15.
  */
-@Path("/{id_company}/events")
+@Path("events")
 public class EventResource {
-
-
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response createEvent(@FormParam("title") String title, @FormParam("description") String description, @FormParam("date") String date, @FormParam("photo") String photo, @FormParam("category") String category,@PathParam("id_company") String companyid, @Context UriInfo uriInfo) throws URISyntaxException {
-
-        if(title==null || description == null || date==null || photo == null || category == null)
-            throw new BadRequestException("all parameters are mandatory");
-        EventDAO eventDAO = new EventDAOImpl();
-        Event event = null;
-
-        try {
-            event = eventDAO.createEvent(title,description,date,photo,category,companyid);
-        } catch (SQLException e) {
-            throw new InternalServerErrorException();
-        }
-        URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + event.getId());
-        return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_EVENT).entity(event).build();
-    }
 
     @GET
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)

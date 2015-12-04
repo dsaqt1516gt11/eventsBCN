@@ -1,8 +1,11 @@
 package edu.upc.eetac.dsa.eventsBCN;
 
+import edu.upc.eetac.dsa.eventsBCN.auth.AuthTokenDAOImpl;
 import edu.upc.eetac.dsa.eventsBCN.dao.*;
+import edu.upc.eetac.dsa.eventsBCN.entity.AuthToken;
 import edu.upc.eetac.dsa.eventsBCN.entity.Company;
 import edu.upc.eetac.dsa.eventsBCN.entity.Event;
+import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -15,8 +18,35 @@ import java.sql.SQLException;
  */
 @Path("companies")
 public class CompanyResource {
-    //Probar
+    @Context
     private SecurityContext securityContext;
+    @POST
+    @Consumes(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    @Produces(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    public Response registerUser(Company company, @Context UriInfo uriInfo) throws URISyntaxException {
+        if (user==null)
+            throw new BadRequestException("all parameters are mandatory");
+        UserDAO userDAO = new UserDAOImpl();
+        User u = null;
+        AuthToken authenticationToken = null;
+        try {
+
+            u = userDAO.createUser(user);
+
+            authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
+        } catch (UserAlreadyExistsException e) {
+            throw new WebApplicationException("Name already exists", Response.Status.CONFLICT);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + user.getId());
+        System.out.println("torna el token a l'usuari:" + uri);
+        return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN).entity(authenticationToken).build();
+    }
+
+
+
+    //Probar
     @Path("/{id_company}/events/{id_event}/assist")
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -51,4 +81,22 @@ public class CompanyResource {
         }
     }
 
+    @Path("/{id_company}/events")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response createEvent(@FormParam("title") String title, @FormParam("description") String description, @FormParam("date") String date, @FormParam("photo") String photo, @FormParam("category") String category,@PathParam("id_company") String companyid, @Context UriInfo uriInfo) throws URISyntaxException {
+
+        if(title==null || description == null || date==null || photo == null || category == null)
+            throw new BadRequestException("all parameters are mandatory");
+        EventDAO eventDAO = new EventDAOImpl();
+        Event event = null;
+
+        try {
+            event = eventDAO.createEvent(title,description,date,photo,category,companyid);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + event.getId());
+        return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_EVENT).entity(event).build();
+    }
 }

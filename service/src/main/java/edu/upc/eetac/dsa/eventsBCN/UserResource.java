@@ -18,6 +18,7 @@ import java.util.List;
  */
 @Path("users")
 public class UserResource {
+
     @POST
     @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
