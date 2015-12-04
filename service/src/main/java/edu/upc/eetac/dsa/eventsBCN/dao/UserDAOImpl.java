@@ -164,10 +164,10 @@ public class UserDAOImpl implements UserDAO {
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UPDATE_USER);
-            stmt.setString(1, id);
-            stmt.setString(2, name);
-            stmt.setString(3, email);
-            stmt.setString(4, photo);
+            stmt.setString(4, id);
+            stmt.setString(1, name);
+            stmt.setString(2, email);
+            stmt.setString(3, photo);
 
             int rows = stmt.executeUpdate();
             if (rows == 1)
@@ -178,7 +178,6 @@ public class UserDAOImpl implements UserDAO {
             if (stmt != null) stmt.close();
             if (connection != null) connection.close();
         }
-
         return user;
     }
 

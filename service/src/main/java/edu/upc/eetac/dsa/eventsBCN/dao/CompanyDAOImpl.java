@@ -237,12 +237,4 @@ public class CompanyDAOImpl implements CompanyDAO{
 
         return company;
     }
-
-    @Override
-    public User getUserCompany(String userid) throws SQLException{
-        User user= null;
-        return user;
-    }
-
-
 }

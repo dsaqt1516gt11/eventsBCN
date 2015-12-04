@@ -18,7 +18,5 @@ public interface CompanyDAO {
     public Company getCompanyById(String id) throws SQLException;
     public Company getCompanyByName(String name) throws SQLException;
     public Company updateCompany(String id, String name, String description,String location,String coordinate) throws SQLException;
-    public User getUserCompany(String userid) throws SQLException;
-
     }
 
