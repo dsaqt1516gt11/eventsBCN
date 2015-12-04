@@ -2,6 +2,7 @@ package edu.upc.eetac.dsa.eventsBCN;
 
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -37,9 +38,18 @@ public class Main {
         // in edu.upc.eetac.dsa.eventsBCN package
         final ResourceConfig rc = new EventsBCNResoucreConfig();
 
+        HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(getBaseURI()), rc);
+        org.glassfish.grizzly.http.server.HttpHandler httpHandler = new StaticHttpHandler("../www/");
+        httpServer.getServerConfiguration().addHttpHandler(httpHandler,"/");
+
+
+
+
+        return httpServer;
+
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(getBaseURI()), rc);
+        //return GrizzlyHttpServerFactory.createHttpServer(URI.create(getBaseURI()), rc);
     }
 
     /**
