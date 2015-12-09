@@ -12,4 +12,8 @@ public interface UserDAOQuery {
     public final static String GET_USER_BY_NAME = "select hex(u.id) as id, u.name as name, u.email as email, u.photo as photo from users u where u.name=?";
     public final static String UPDATE_USER = "update users set name=?, email=?, photo=? where id=unhex(?)";
     public final static String GET_PASSWORD =  "select hex(password) as password from users where id=unhex(?)";
+    public final static String FOLLOW_USER = "insert into r_users (referenceid,followerid) values(UNHEX(?),UNHEX(?))";
+    public final static String UNFOLLOW_USER = "delete from r_users where referenceid=unhex(?) and followerid=unhex(?)";
+    public final static String COMPARE_USER_FOLLOW =  "select hex(followerid) as followerid from r_users where referenceid=UNHEX(?) and followerid=UNHEX(?)";
+
 }

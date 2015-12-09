@@ -155,8 +155,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User updateProfile(String id, String name, String email, String photo, List<String> categories) throws SQLException {
-        User user = null;
+    public User updateProfile(User user) throws SQLException {
+        User u = null;
 
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -164,21 +164,21 @@ public class UserDAOImpl implements UserDAO {
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UPDATE_USER);
-            stmt.setString(4, id);
-            stmt.setString(1, name);
-            stmt.setString(2, email);
-            stmt.setString(3, photo);
+            stmt.setString(4, user.getId());
+            stmt.setString(1, user.getName());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getPhoto());
 
             int rows = stmt.executeUpdate();
             if (rows == 1)
-                user = getUserById(id);
+                u = getUserById(user.getId());
         } catch (SQLException e) {
             throw e;
         } finally {
             if (stmt != null) stmt.close();
             if (connection != null) connection.close();
         }
-        return user;
+        return u;
     }
 
     @Override
@@ -186,6 +186,7 @@ public class UserDAOImpl implements UserDAO {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
+
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.GET_PASSWORD);
@@ -210,5 +211,87 @@ public class UserDAOImpl implements UserDAO {
             if (stmt != null) stmt.close();
             if (connection != null) connection.close();
         }
+    }
+
+    @Override
+    public boolean userFollow(String userfollowid, String userFollowerid) throws  SQLException, UserAlreadyFollowedException{
+        Connection connection = null;
+        PreparedStatement stmt = null;
+
+        try {
+            boolean isFollowed = checkFollow(userfollowid,userFollowerid);
+            if (isFollowed == true)
+                throw new UserAlreadyFollowedException();
+
+            System.out.println(isFollowed);
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(UserDAOQuery.FOLLOW_USER);
+            stmt.setString(1, userfollowid);
+            stmt.setString(2, userFollowerid);
+
+            int rows = stmt.executeUpdate();
+            return (rows == 1);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+
+
+    }
+
+    @Override
+    public boolean userUnfollow(String userfollowid, String userFollowerid) throws SQLException,UserNotFollowedException{
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+
+        try {
+
+            boolean isFollowed = checkFollow(userfollowid,userFollowerid);
+            if (isFollowed != true)
+                throw new UserNotFollowedException();
+
+            System.out.println(isFollowed);
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(UserDAOQuery.UNFOLLOW_USER);
+            stmt.setString(1, userfollowid);
+            stmt.setString(2, userFollowerid);
+
+            int rows = stmt.executeUpdate();
+            return (rows == 1);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+
+    }
+    @Override
+    public boolean checkFollow(String referenceid, String followerid) throws SQLException {
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        boolean a=false;
+        try {
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(UserDAOQuery.COMPARE_USER_FOLLOW);
+
+            stmt.setString(1, referenceid);
+            stmt.setString(2, followerid);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) { a=true;}
+        }catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+        return a;
     }
 }

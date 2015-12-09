@@ -15,8 +15,16 @@ public interface UserDAO {
 
     public User getUserByName(String name) throws SQLException;
 
-    public User updateProfile(String id, String name, String email, String photo, List<String> categories) throws SQLException;
+    public User updateProfile(User user) throws SQLException;
 
     public boolean checkPassword(String id, String password) throws SQLException;
+
+    public boolean userFollow(String userfollowid, String userfollowerid) throws SQLException,UserAlreadyFollowedException;
+
+    public boolean userUnfollow(String userfollowid, String userfollowerid) throws SQLException,UserNotFollowedException;
+
+    public boolean checkFollow(String referenceid, String followerid) throws SQLException;
+
+
 
 }

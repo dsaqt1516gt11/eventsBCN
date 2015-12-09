@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * Created by Aitor on 25/10/15.
  */
+
 @Path("users")
 public class UserResource {
 
@@ -95,16 +96,55 @@ public class UserResource {
         String userid = securityContext.getUserPrincipal().getName();
         if(!userid.equals(id))
             throw new ForbiddenException("operation not allowed");
-
+        User u = null;
         UserDAO userDAO = new UserDAOImpl();
         try {
-            user = userDAO.updateProfile(userid, user.getName(), user.getEmail(), user.getPhoto(), user.getCategories());
-            if(user == null)
+            user.setId(id);
+            u = userDAO.updateProfile(user);
+            if(u == null)
                 throw new NotFoundException("User with id = "+id+" doesn't exist");
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
-        return user;
+        return u;
     }
+
+    @Path("/{id_follow}/follow")
+    @POST
+    public void userFollow(@PathParam("id_follow") String followid){
+
+        String userid = securityContext.getUserPrincipal().getName();
+
+        UserDAO userDAO = new UserDAOImpl();
+        try {
+            userDAO.userFollow(followid,userid);
+
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        } catch (UserAlreadyFollowedException e) {
+            throw new BadRequestException("Ya sigues a esta persona");
+        }
+
+    }
+
+    @Path("/{id_follow}/unfollow")
+    @POST
+    public void userUnfollow(@PathParam("id_follow") String followid){
+
+        String userid = securityContext.getUserPrincipal().getName();
+
+        UserDAO userDAO = new UserDAOImpl();
+        try {
+            userDAO.userUnfollow(followid,userid);
+
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        } catch (UserNotFollowedException e) {
+            throw new NotFoundException("No sigues a esta persona");
+        }
+
+    }
+
+
 
 }

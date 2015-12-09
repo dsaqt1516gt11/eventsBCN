@@ -2,15 +2,17 @@ package edu.upc.eetac.dsa.eventsBCN;
 
 import edu.upc.eetac.dsa.eventsBCN.auth.AuthTokenDAO;
 import edu.upc.eetac.dsa.eventsBCN.auth.AuthTokenDAOImpl;
+import edu.upc.eetac.dsa.eventsBCN.auth.UserInfo;
 import edu.upc.eetac.dsa.eventsBCN.dao.UserDAO;
 import edu.upc.eetac.dsa.eventsBCN.dao.UserDAOImpl;
 import edu.upc.eetac.dsa.eventsBCN.entity.AuthToken;
+import edu.upc.eetac.dsa.eventsBCN.entity.Role;
 import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 /**
@@ -30,6 +32,7 @@ public class LoginResource {
 
         User user = null;
         AuthToken authToken = null;
+
         try{
             UserDAO userDAO = new UserDAOImpl();
             user = userDAO.getUserByName(loginid);
@@ -41,10 +44,13 @@ public class LoginResource {
             AuthTokenDAO authTokenDAO = new AuthTokenDAOImpl();
             authTokenDAO.deleteToken(user.getId());
             authToken = authTokenDAO.createAuthToken(user.getId());
+
+
         }catch(SQLException e){
             throw new InternalServerErrorException();
         }
         return authToken;
+
     }
 
     @DELETE
