@@ -9,13 +9,15 @@ import java.sql.SQLException;
  * Created by juan on 30/11/15.
  */
 public interface EventDAO {
-
-    public Event createEvent( String title, String description,String date,String photo,String category,String companyid) throws SQLException;
+    public boolean assisttoEvent(String id, String eventid) throws SQLException, UserAlreadyAssisttoEvent;
+    public boolean wontassit(String id, String eventid) throws SQLException, UserWontAssistException;
+    public boolean checkUser(String id, String eventid) throws SQLException;
+    public Event createEvent(Event event) throws SQLException;
     public Event getEventById(String id) throws SQLException;
     public EventCollection getEvents() throws SQLException;
     public EventCollection getEventsByCategory(String category) throws SQLException;
-    public EventCollection getEventsByCompany(String companyid) throws SQLException;
-    public Event updateEvent(String id, String title, String description,String date,String photo,String category) throws SQLException;
-    public boolean deleteEvent(String id) throws SQLException;
+    public EventCollection getEventsByCompany(String idcompany) throws SQLException;
+    public Event updateEvent(Event event) throws SQLException;
+    public boolean deleteEvent(String eventid) throws SQLException;
 
 }

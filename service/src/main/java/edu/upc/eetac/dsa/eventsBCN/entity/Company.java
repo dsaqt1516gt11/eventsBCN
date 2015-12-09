@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.glassfish.jersey.linking.InjectLinks;
 
 import javax.ws.rs.core.Link;
+import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.util.List;
 /**
  * Created by Aitor on 29/11/15.
@@ -18,7 +20,8 @@ public class Company {
     private String name;
     private String description;
     private String location;
-    private String coordinate;
+    private Float latitude;
+    private Float longitude;
 
     public List<Link> getLinks() {
         return links;
@@ -68,11 +71,19 @@ public class Company {
         this.location = location;
     }
 
-    public String getCoordinate() {
-        return coordinate;
+    public Float getLatitude() {
+        return latitude;
     }
 
-    public void setCoordinate(String coordinate) {
-        this.coordinate = coordinate;
+    public void setLatitude(Float latitude) {
+        this.latitude = latitude;
+    }
+
+    public Float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Float longitude) {
+        this.longitude = longitude;
     }
 }

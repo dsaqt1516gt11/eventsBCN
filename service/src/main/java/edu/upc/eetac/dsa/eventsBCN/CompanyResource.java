@@ -2,10 +2,7 @@ package edu.upc.eetac.dsa.eventsBCN;
 
 import edu.upc.eetac.dsa.eventsBCN.auth.AuthTokenDAOImpl;
 import edu.upc.eetac.dsa.eventsBCN.dao.*;
-import edu.upc.eetac.dsa.eventsBCN.entity.AuthToken;
-import edu.upc.eetac.dsa.eventsBCN.entity.Company;
-import edu.upc.eetac.dsa.eventsBCN.entity.Event;
-import edu.upc.eetac.dsa.eventsBCN.entity.User;
+import edu.upc.eetac.dsa.eventsBCN.entity.*;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -23,80 +20,170 @@ public class CompanyResource {
     @POST
     @Consumes(EventsBCNMediaType.EVENTSBCN_COMPANY)
     @Produces(EventsBCNMediaType.EVENTSBCN_COMPANY)
-    public Response registerUser(Company company, @Context UriInfo uriInfo) throws URISyntaxException {
-        if (user==null)
+    public Company createCompany(Company company){
+        if (company==null)
             throw new BadRequestException("all parameters are mandatory");
-        UserDAO userDAO = new UserDAOImpl();
-        User u = null;
-        AuthToken authenticationToken = null;
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        Company c = null;
+        company.setUserid(securityContext.getUserPrincipal().getName());
         try {
-
-            u = userDAO.createUser(user);
-
-            authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
-        } catch (UserAlreadyExistsException e) {
+            System.out.println("Ahora iremos al CompanyDAOImpl");
+            c = companyDAO.createCompany(company);
+        } catch (CompanyAlreadyExistsException e) {
             throw new WebApplicationException("Name already exists", Response.Status.CONFLICT);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
-        URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + user.getId());
-        System.out.println("torna el token a l'usuari:" + uri);
-        return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN).entity(authenticationToken).build();
+        return c;
     }
 
 
 
-    //Probar
-    @Path("/{id_company}/events/{id_event}/assist")
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public void assistEvent(@PathParam("id_company") String idcompany,@PathParam("id_event") String idevent){
-
-
-        CompanyDAO companyDAO = new CompanyDAOImpl();
-        EventDAO eventDAO = new EventDAOImpl();
-        Event event = null;
+    @Path("/{id}")
+    @GET
+    @Produces(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    public Company getCompanybyId(@PathParam("id") String id) {
+        System.out.println("ID: " + id);
         Company company = null;
         try {
-            company = companyDAO.getCompanyById(idcompany);
-            event = eventDAO.getEventById(idevent);
-            if(company==null)
-                throw new NotFoundException("Company with id = "+idcompany+" doesn't exist");
-            else if(event==null)
-                throw new NotFoundException("Event with id = "+idevent+" doesn't exist");
-            else{
-                String userid = securityContext.getUserPrincipal().getName();
-                try {
-                    companyDAO.assisttoEvent(userid, idevent);
-                }
-                catch (UserAlreadyAssisttoEvent e){
-                    throw new ForbiddenException();
-                }
-            }
-
-
+            company = (new CompanyDAOImpl()).getCompanyById(id);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException(e.getMessage());
         }
-        catch (SQLException e) {
+        if (company == null)
+            throw new NotFoundException("Company with id = " + id + " doesn't exist");
+        return company;
+    }
+
+    @Path("/search")
+    @GET
+    @Produces(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    public Company getCompanybyName(@QueryParam("name") String name) {
+        System.out.println("Estamos dentro!!!!");
+        System.out.println(name);
+        Company company = null;
+        try {
+            company = (new CompanyDAOImpl()).getCompanyByName(name);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+        if (company == null)
+            throw new NotFoundException("Company with name = " + name + " doesn't exist");
+        return company;
+    }
+
+
+    @Path("/{id}")
+    @PUT
+    @Consumes(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    @Produces(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    public Company updateCompany(@PathParam("id") String id, Company company) {
+        if(company == null)
+            throw new BadRequestException("entity is null");
+
+        String userid = securityContext.getUserPrincipal().getName();
+        if(!userid.equals(company.getUserid()))
+            throw new ForbiddenException("operation not allowed");
+        Company c=null;
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        try {
+            company.setId(id);
+            c = companyDAO.updateCompany(company);
+            if(c == null)
+                throw new NotFoundException("Company with id = "+id+" doesn't exist");
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        return c;
+    }
+
+
+    @Path("/{id_company}/events")
+    @POST
+    @Consumes(EventsBCNMediaType.EVENTSBCN_EVENT)
+    @Produces(EventsBCNMediaType.EVENTSBCN_EVENT)
+    public Event createEvent(Event event, @PathParam("id_company") String id_company) throws URISyntaxException, SQLException {
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        EventDAO eventDAO = new EventDAOImpl();
+        Event ev = null;
+
+        if(event== null)
+            throw new BadRequestException("all parameters are mandatory");
+        if(securityContext.isUserInRole("company")==false)
+            throw new ForbiddenException("You are not a company bro ;)");
+        event.setCompanyid(companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName()));
+        try {
+            ev = eventDAO.createEvent(event);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        return ev;
+    }
+
+
+    @Path("/{id_company}/events/{id}")
+    @DELETE
+    public void deleteEvent(@PathParam("id_company") String c_id, @PathParam("id") String id) throws SQLException {
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        EventDAO eventDAO = new EventDAOImpl();
+
+        if(securityContext.isUserInRole("company")==false)
+            throw new ForbiddenException("You are not a company bro ;)");
+
+        String companyid = companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName());
+        System.out.println(companyid);
+        System.out.println(c_id);
+        if(c_id!=companyid) throw new ForbiddenException("Error in company id");
+        try {
+            if(!eventDAO.deleteEvent(id))
+                throw new NotFoundException("Event with id = "+id+" doesn't exist or you didn't create this event");
+        } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
     }
 
     @Path("/{id_company}/events")
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response createEvent(@FormParam("title") String title, @FormParam("description") String description, @FormParam("date") String date, @FormParam("photo") String photo, @FormParam("category") String category,@PathParam("id_company") String companyid, @Context UriInfo uriInfo) throws URISyntaxException {
-
-        if(title==null || description == null || date==null || photo == null || category == null)
-            throw new BadRequestException("all parameters are mandatory");
+    @GET
+    @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)
+    public EventCollection getStings(@PathParam("id_company") String idcompany ,@QueryParam("timestamp") long timestamp, @DefaultValue("true") @QueryParam("before") boolean before) {
+        EventCollection eventCollection = null;
         EventDAO eventDAO = new EventDAOImpl();
-        Event event = null;
-
         try {
-            event = eventDAO.createEvent(title,description,date,photo,category,companyid);
+            if (before && timestamp == 0) timestamp = System.currentTimeMillis();
+            eventCollection = eventDAO.getEventsByCompany(idcompany);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
-        URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + event.getId());
-        return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_EVENT).entity(event).build();
+        return eventCollection;
+    }
+
+
+    @Path("/{id_company}/events/{id}")
+    @PUT
+    @Consumes(EventsBCNMediaType.EVENTSBCN_EVENT)
+    @Produces(EventsBCNMediaType.EVENTSBCN_EVENT)
+    public Event updateEvent(@PathParam("id_company") String c_id, @PathParam("id") String id, Event event) throws SQLException {
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        if(event == null)
+            throw new BadRequestException("entity is null");
+        //Comprobar q empresa ha creado ese evento (pillar empresa q queremo modificar y la id del token y concuerda con la del path
+        String companyid = companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName());
+        if(c_id!=companyid) throw new ForbiddenException("Error in company id");
+
+        String segundacompanyid = companyDAO.getCompanyById(id).getId();
+        if(segundacompanyid!=companyid) throw new ForbiddenException("You haven't auth");
+
+
+        Event event1=null;
+        EventDAO eventDAO = new EventDAOImpl();
+        try {
+            event.setId(id);
+            event1 = eventDAO.updateEvent(event);
+            if(event1 == null)
+                throw new NotFoundException("Event with id = "+id+" doesn't exist");
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        return event1;
     }
 }
