@@ -31,7 +31,6 @@ public class UserResource {
         User u = null;
         AuthToken authenticationToken = null;
         try {
-
             u = userDAO.createUser(user);
 
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());

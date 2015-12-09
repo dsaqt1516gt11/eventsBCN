@@ -24,7 +24,7 @@ public class AuthToken {
             @InjectLink(resource = UserResource.class, method = "getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${instance.userid}"))
     })
     private List<Link> links;
-
+    private String role;
     private String userid;
     private String token;
 
@@ -50,5 +50,13 @@ public class AuthToken {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

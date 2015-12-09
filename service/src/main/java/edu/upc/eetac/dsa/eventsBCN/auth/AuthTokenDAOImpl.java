@@ -75,6 +75,16 @@ public class AuthTokenDAOImpl implements AuthTokenDAO {
             authToken = new AuthToken();
             authToken.setToken(token);
             authToken.setUserid(userid);
+
+            stmt.close();
+            stmt = connection.prepareStatement(AuthTokenDAOQuery.GET_ROLES_OF_USER);
+            stmt.setString(1, userid);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                authToken.setRole(rs.getString("role"));
+            }
+
+
         } catch (SQLException e) {
             throw e;
         } finally {
