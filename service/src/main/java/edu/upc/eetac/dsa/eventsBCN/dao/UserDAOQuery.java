@@ -15,5 +15,5 @@ public interface UserDAOQuery {
     public final static String FOLLOW_USER = "insert into r_users (referenceid,followerid) values(UNHEX(?),UNHEX(?))";
     public final static String UNFOLLOW_USER = "delete from r_users where referenceid=unhex(?) and followerid=unhex(?)";
     public final static String COMPARE_USER_FOLLOW =  "select hex(followerid) as followerid from r_users where referenceid=UNHEX(?) and followerid=UNHEX(?)";
-
+    public final static String CATEGORIES_BY_USERID = "select category from categories_user where userid=unhex(?)";
 }

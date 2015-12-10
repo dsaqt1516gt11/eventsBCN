@@ -71,7 +71,7 @@ public class EventResource {
         }
     }
 
-
+    @Path("/test")
     @GET
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)
     public EventCollection getEvents(){
@@ -100,5 +100,24 @@ public class EventResource {
             throw new InternalServerErrorException();
         }
         return event;
+    }
+
+
+    @GET
+    @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)
+    public EventCollection getEventsByCategoriesUser(){
+
+        EventCollection eventCollection = null;
+        EventDAO eventDAO = new EventDAOImpl();
+        try {
+            String userid = securityContext.getUserPrincipal().getName();
+            System.out.println("EL ID es" + userid);
+            eventCollection = eventDAO.getEventsByCategories(userid);
+        } catch (SQLException e) {
+
+            throw new InternalServerErrorException();
+        }
+
+        return eventCollection;
     }
 }

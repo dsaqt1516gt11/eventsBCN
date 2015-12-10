@@ -114,7 +114,9 @@ public class CompanyResource {
         event.setCompanyid(companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName()));
         try {
             ev = eventDAO.createEvent(event);
-        } catch (SQLException e) {
+        }catch (EventAlreadyExistsException e) {
+            throw new WebApplicationException("Event with that title already exists", Response.Status.CONFLICT);
+        }catch (SQLException e) {
             throw new InternalServerErrorException();
         }
         return ev;
@@ -145,7 +147,7 @@ public class CompanyResource {
     @Path("/{id_company}/events")
     @GET
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)
-    public EventCollection getStings(@PathParam("id_company") String idcompany ,@QueryParam("timestamp") long timestamp, @DefaultValue("true") @QueryParam("before") boolean before) {
+    public EventCollection getEventsCompany(@PathParam("id_company") String idcompany ,@QueryParam("timestamp") long timestamp, @DefaultValue("true") @QueryParam("before") boolean before) {
         EventCollection eventCollection = null;
         EventDAO eventDAO = new EventDAOImpl();
         try {

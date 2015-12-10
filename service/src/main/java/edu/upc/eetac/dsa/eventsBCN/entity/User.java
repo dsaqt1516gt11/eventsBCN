@@ -18,6 +18,7 @@ public class User {
     private String password;
     private String email;
     private String photo;
+    private List<String> categories;
 
     public List<String> getCategories() {
         return categories;
@@ -26,8 +27,6 @@ public class User {
     public void setCategories(List<String> categories) {
         this.categories = categories;
     }
-
-    private List<String> categories;
 
     public List<Link> getLinks() {
         return links;

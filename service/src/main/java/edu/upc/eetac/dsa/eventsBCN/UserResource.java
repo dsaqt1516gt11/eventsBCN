@@ -88,11 +88,9 @@ public class UserResource {
     public User updateUser(@PathParam("id") String id, User user) {
         if(user == null)
             throw new BadRequestException("entity is null");
-        if(!id.equals(user.getId()))
-            throw new BadRequestException("path parameter id and entity parameter id doesn't match");
-        System.out.println("PELELEEEEEEE!!!!");
 
         String userid = securityContext.getUserPrincipal().getName();
+        System.out.println("ID:" +userid);
         if(!userid.equals(id))
             throw new ForbiddenException("operation not allowed");
         User u = null;

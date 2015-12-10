@@ -3,7 +3,10 @@ package edu.upc.eetac.dsa.eventsBCN.dao;
 import edu.upc.eetac.dsa.eventsBCN.entity.Event;
 import edu.upc.eetac.dsa.eventsBCN.entity.EventCollection;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.sql.*;
+import java.util.List;
 
 /**
  * Created by juan on 30/11/15.
@@ -11,11 +14,15 @@ import java.sql.*;
 public class EventDAOImpl implements EventDAO {
 
     @Override
-    public Event createEvent(Event event) throws SQLException {
+    public Event createEvent(Event event) throws SQLException, EventAlreadyExistsException {
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
         try {
+            Event ev = getEventByTitle(event.getTitle());
+            if (ev != null)
+                throw new EventAlreadyExistsException();
+
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
@@ -82,6 +89,43 @@ public class EventDAOImpl implements EventDAO {
         return event;
     }
 
+
+    @Override
+    public Event getEventByTitle(String title) throws SQLException {
+        Event event = null;
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        try {
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_TITLE);
+            stmt.setString(1, title);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                event = new Event();
+                event.setId(rs.getString("id"));
+                event.setTitle(rs.getString("title"));
+                event.setDescription(rs.getString("description"));
+                event.setDate(rs.getString("date"));
+                event.setPhoto(rs.getString("photo"));
+                event.setCategory(rs.getString("category"));
+                event.setCompanyid(rs.getString("companyid"));
+                event.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+                event.setLastModified(rs.getTimestamp("last_modified").getTime());
+
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+        return event;
+    }
+
+
     @Override
     public EventCollection getEvents() throws SQLException{
 
@@ -119,33 +163,50 @@ public class EventDAOImpl implements EventDAO {
     }
 
     @Override
-    public EventCollection getEventsByCategory(String category) throws SQLException{
+    public EventCollection getEventsByCategories(String id) throws SQLException{
 
         EventCollection eventCollection = new EventCollection();
-
+        System.out.println("ID:" + id );
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
+            //consultar las categorias de un usuario
+            List<String> categories = null;
             connection = Database.getConnection();
 
-            stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_CATEGORY);
-            stmt.setString(1, category);
+            stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
+            stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
+            System.out.println("Primera consulta, ahroa vamos a guardar el resultado en una lista");
+            while (rs.next()) {
+                categories.add("category");
+                System.out.println("Estamos dentro del bucle");
+            }
+            stmt.close();
 
-            if (rs.next()) {
-                Event event = new Event();
-                event.setId(rs.getString("id"));
-                event.setTitle(rs.getString("title"));
-                event.setDescription(rs.getString("description"));
-                event.setDate(rs.getString("date"));
-                event.setPhoto(rs.getString("photo"));
-                event.setCategory(rs.getString("category"));
-                event.setCompanyid(rs.getString("companyid"));
-                event.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
-                event.setLastModified(rs.getTimestamp("last_modified").getTime());
+            for (String category : categories) {
+                System.out.println(category);
+                connection = Database.getConnection();
+                stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_CATEGORY);
+                stmt.setString(1, category);
+                ResultSet res = stmt.executeQuery();
 
-                eventCollection.setOldestTimestamp(event.getLastModified());
-                eventCollection.getEvents().add(event);
+                if (res.next()) {
+                    Event event = new Event();
+                    event.setId(res.getString("id"));
+                    event.setTitle(res.getString("title"));
+                    event.setDescription(res.getString("description"));
+                    event.setDate(res.getString("date"));
+                    event.setPhoto(res.getString("photo"));
+                    event.setCategory(res.getString("category"));
+                    event.setCompanyid(res.getString("companyid"));
+                    event.setCreationTimestamp(res.getTimestamp("creation_timestamp").getTime());
+                    event.setLastModified(res.getTimestamp("last_modified").getTime());
+
+                    eventCollection.setOldestTimestamp(event.getLastModified());
+                    eventCollection.getEvents().add(event);
+                }
+                stmt.close();
             }
         } catch (SQLException e) {
             throw e;
