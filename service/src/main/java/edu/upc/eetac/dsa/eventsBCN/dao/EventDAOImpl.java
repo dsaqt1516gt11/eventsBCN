@@ -6,6 +6,7 @@ import edu.upc.eetac.dsa.eventsBCN.entity.EventCollection;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -171,7 +172,7 @@ public class EventDAOImpl implements EventDAO {
         PreparedStatement stmt = null;
         try {
             //consultar las categorias de un usuario
-            List<String> categories = null;
+            List<String> categories = new ArrayList<>();
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
@@ -179,10 +180,13 @@ public class EventDAOImpl implements EventDAO {
             ResultSet rs = stmt.executeQuery();
             System.out.println("Primera consulta, ahroa vamos a guardar el resultado en una lista");
             while (rs.next()) {
-                categories.add("category");
+                System.out.println("antes de añadir");
+                System.out.println(rs.getString("category"));
+                categories.add(rs.getString("category"));
                 System.out.println("Estamos dentro del bucle");
             }
             stmt.close();
+            System.out.println("cojo categorias");
 
             for (String category : categories) {
                 System.out.println(category);
