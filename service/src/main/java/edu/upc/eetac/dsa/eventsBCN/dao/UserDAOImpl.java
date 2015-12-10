@@ -59,10 +59,13 @@ public class UserDAOImpl implements UserDAO {
 
             for (String nombre : user.getCategories())
             {
-                stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
-                stmt.setString(1, user.getId());
-                stmt.setString(2, nombre);
-                stmt.executeUpdate();
+                if(nombre!=null && nombre!="") {
+                    stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
+                    stmt.setString(1, user.getId());
+                    stmt.setString(2, nombre);
+                    stmt.executeUpdate();
+                }
+
             }
 
             System.out.println("relaciones usuario categorias creadas");
