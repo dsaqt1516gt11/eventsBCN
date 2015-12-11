@@ -17,7 +17,8 @@ CREATE TABLE companies (
     name VARCHAR(50) NOT NULL UNIQUE,
     description VARCHAR(400) NOT NULL,
     location VARCHAR(250) NOT NULL,
-    coordinate point,
+    latitude FLOAT(10,6),
+    longitude FLOAT(10,6),
     userid BINARY(16) NOT NULL,
     FOREIGN KEY (userid) REFERENCES users(id) on delete cascade,
     PRIMARY KEY (id)
