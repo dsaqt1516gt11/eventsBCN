@@ -19,6 +19,15 @@ public class User {
     private String email;
     private String photo;
     private List<String> categories;
+    private boolean isFollowed;
+
+    public boolean isFollowed() {
+        return isFollowed;
+    }
+
+    public void setIsFollowed(boolean isFollowed) {
+        this.isFollowed = isFollowed;
+    }
 
     public List<String> getCategories() {
         return categories;

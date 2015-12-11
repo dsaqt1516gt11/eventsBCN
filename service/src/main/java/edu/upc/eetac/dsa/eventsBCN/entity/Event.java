@@ -1,6 +1,9 @@
 package edu.upc.eetac.dsa.eventsBCN.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import edu.upc.eetac.dsa.eventsBCN.*;
+import org.glassfish.jersey.linking.Binding;
+import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
 import javax.ws.rs.core.Link;
@@ -12,7 +15,15 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Event {
-    @InjectLinks({})
+    @InjectLinks({
+            @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "Beeter Root API"),
+            @InjectLink(resource = EventResource.class, method = "getEvent", style = InjectLink.Style.ABSOLUTE, rel = "self event", title = "Event", bindings = @Binding(name = "id", value = "${instance.id}")),
+            @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
+            //@InjectLink(resource = UserResource.class, method = "getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", bindings = @Binding(name = "id", value = "${instance.userid}")),
+            @InjectLink(resource = CompanyResource.class, method = "getCompany", style = InjectLink.Style.ABSOLUTE, rel = "company-profile", title = "Company", bindings = @Binding(name = "id", value = "${instance.companyid}")),
+
+
+    })
     private List<Link> links;
     private String id;
     private String title;
@@ -24,6 +35,15 @@ public class Event {
     private long lastModified;
     private long creationTimestamp;
     private List<User> users = new ArrayList<>();
+    private boolean isAssisted;
+
+    public boolean isAssisted() {
+        return isAssisted;
+    }
+
+    public void setIsAssisted(boolean isAssisted) {
+        this.isAssisted = isAssisted;
+    }
 
     public List<Link> getLinks() {
         return links;

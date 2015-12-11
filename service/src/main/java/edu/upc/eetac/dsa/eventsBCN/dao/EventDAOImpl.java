@@ -187,6 +187,7 @@ public class EventDAOImpl implements EventDAO {
             }
             stmt.close();
             System.out.println("cojo categorias");
+            System.out.println(categories);
 
             for (String category : categories) {
                 System.out.println(category);
@@ -195,7 +196,7 @@ public class EventDAOImpl implements EventDAO {
                 stmt.setString(1, category);
                 ResultSet res = stmt.executeQuery();
 
-                if (res.next()) {
+                while (res.next()) {
                     Event event = new Event();
                     event.setId(res.getString("id"));
                     event.setTitle(res.getString("title"));

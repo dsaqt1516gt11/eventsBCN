@@ -23,5 +23,9 @@
     "methods": [
       "GET"
     ]
+  },
+  {
+    "path": "events/test",
+    "methods": ["GET"]
   }
 ]
