@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Aitor on 24/10/15.
  */
 public interface UserDAO {
-    public User createUser(User user)  throws SQLException, UserAlreadyExistsException;
+    public User createUser(User user, String role)  throws SQLException, UserAlreadyExistsException;
 
     public User getUserById(String id) throws SQLException;
 

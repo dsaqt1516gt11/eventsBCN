@@ -23,7 +23,7 @@ public class UserResource {
     @POST
     @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
-    public Response registerUser(User user, @Context UriInfo uriInfo) throws URISyntaxException {
+    public Response registerUser(User user, @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
         System.out.println(user.getCategories());
         if (user==null)
             throw new BadRequestException("all parameters are mandatory");
@@ -31,7 +31,7 @@ public class UserResource {
         User u = null;
         AuthToken authenticationToken = null;
         try {
-            u = userDAO.createUser(user);
+            u = userDAO.createUser(user, role);
 
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {

@@ -19,7 +19,7 @@ import java.util.Scanner;
  */
 public class UserDAOImpl implements UserDAO {
     @Override
-    public User createUser(User user) throws SQLException, UserAlreadyExistsException{
+    public User createUser(User user, String role) throws SQLException, UserAlreadyExistsException{
         System.out.println("Estoy dentro de createUser");
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -50,8 +50,9 @@ public class UserDAOImpl implements UserDAO {
             System.out.println("Usuario creado");
 
             stmt.close();
-            stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE_REGISTERED);
+            stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE);
             stmt.setString(1, user.getId());
+            stmt.setString(2, role);
             stmt.executeUpdate();
             System.out.println("Rol asignado");
 

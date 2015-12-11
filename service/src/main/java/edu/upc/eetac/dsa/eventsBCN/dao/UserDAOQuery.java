@@ -6,7 +6,7 @@ package edu.upc.eetac.dsa.eventsBCN.dao;
 public interface UserDAOQuery {
     public final static String UUID = "select REPLACE(UUID(),'-','')";
     public final static String CREATE_USER = "insert into users (id, name, password, email, photo) values (UNHEX(?), ?, UNHEX(MD5(?)), ?, ?)";
-    public final static String ASSIGN_ROLE_REGISTERED = "insert into user_roles (userid, role) values (UNHEX(?), 'registered')";
+    public final static String ASSIGN_ROLE = "insert into user_roles (userid, role) values (UNHEX(?), ?)";
     public final static String ASSIGN_CATEGORIE = "insert into categories_user (userid, category) values (UNHEX(?), ?)";
     public final static String GET_USER_BY_ID = "select hex(u.id) as id, u.name as name, u.email as email, u.photo as photo from users u where id=unhex(?)";
     public final static String GET_USER_BY_NAME = "select hex(u.id) as id, u.name as name, u.email as email, u.photo as photo from users u where u.name=?";
