@@ -9,10 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Aitor on 24/10/15.
@@ -57,21 +54,21 @@ public class UserDAOImpl implements UserDAO {
             System.out.println("Rol asignado");
 
             stmt.close();
+            System.out.println(role);
+            if(role.equals("registered")) {
+                System.out.println("entro al if");
+                for (String nombre : user.getCategories()) {
+                    if (nombre != null && nombre != "") {
+                        stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
+                        stmt.setString(1, user.getId());
+                        stmt.setString(2, nombre);
+                        stmt.executeUpdate();
+                    }
 
-            for (String nombre : user.getCategories())
-            {
-                if(nombre!=null && nombre!="") {
-                    stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
-                    stmt.setString(1, user.getId());
-                    stmt.setString(2, nombre);
-                    stmt.executeUpdate();
                 }
-
+                System.out.println("relaciones usuario categorias creadas");
+                connection.commit();
             }
-
-            System.out.println("relaciones usuario categorias creadas");
-
-            connection.commit();
         } catch (SQLException e) {
             throw e;
         } finally {
@@ -98,16 +95,36 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(1, id);
 
             // Ejecuta la consulta
-            ResultSet rs = stmt.executeQuery();
+            ResultSet res = stmt.executeQuery();
 
             // Procesa los resultados
-            if (rs.next()) {
+            if (res.next()) {
                 user = new User();
-                user.setId(rs.getString("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setPhoto(rs.getString("photo"));
+                user.setId(res.getString("id"));
+                user.setName(res.getString("name"));
+                user.setEmail(res.getString("email"));
+                user.setPhoto(res.getString("photo"));
             }
+
+            //pillar las categoiras de un usuario
+            stmt.close();
+            //consultar las categorias de un usuario
+            List<String> categories = new ArrayList<>();
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Primera consulta, ahroa vamos a guardar el resultado en una lista");
+            while (rs.next()) {
+                System.out.println("antes de añadir");
+                System.out.println(rs.getString("category"));
+                categories.add(rs.getString("category"));
+                System.out.println("Estamos dentro del bucle");
+            }
+            System.out.println("cojo categorias");
+            System.out.println(categories);
+            user.setCategories(categories);
         } catch (SQLException e) {
             // Relanza la excepción
             throw e;
@@ -136,16 +153,37 @@ public class UserDAOImpl implements UserDAO {
             stmt.setString(1, name);
 
             // Ejecuta la consulta
-            ResultSet rs = stmt.executeQuery();
+            ResultSet res = stmt.executeQuery();
 
             // Procesa los resultados
-            if (rs.next()) {
+            if (res.next()) {
                 user = new User();
-                user.setId(rs.getString("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setPhoto(rs.getString("photo"));
+                user.setId(res.getString("id"));
+                user.setName(res.getString("name"));
+                user.setEmail(res.getString("email"));
+                user.setPhoto(res.getString("photo"));
             }
+
+            //pillar las categoiras de un usuario
+            stmt.close();
+            //consultar las categorias de un usuario
+            List<String> categories = new ArrayList<>();
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
+            stmt.setString(1, user.getId());
+            ResultSet rs = stmt.executeQuery();
+            System.out.println("Primera consulta, ahroa vamos a guardar el resultado en una lista");
+            while (rs.next()) {
+                System.out.println("antes de añadir");
+                System.out.println(rs.getString("category"));
+                categories.add(rs.getString("category"));
+                System.out.println("Estamos dentro del bucle");
+            }
+            System.out.println("cojo categorias");
+            System.out.println(categories);
+            user.setCategories(categories);
+
         } catch (SQLException e) {
             // Relanza la excepción
             throw e;

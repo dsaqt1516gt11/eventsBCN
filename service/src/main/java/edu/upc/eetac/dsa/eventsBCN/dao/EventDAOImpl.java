@@ -338,6 +338,8 @@ public class EventDAOImpl implements EventDAO {
             stmt.setString(2, eventid);
             stmt.executeUpdate();
 
+            //meter el usuario en la lista de usuarios q asisten al evento
+
         } catch (SQLException e) {
             throw e;
         } finally {
