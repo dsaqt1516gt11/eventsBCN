@@ -25,8 +25,10 @@ public class UserResource {
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
     public Response registerUser(User user, @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
         System.out.println(user.getCategories());
-        if (user==null)
+        if (user==null) {
+            System.out.println("error user==null");
             throw new BadRequestException("all parameters are mandatory");
+        }
         UserDAO userDAO = new UserDAOImpl();
         User u = null;
         AuthToken authenticationToken = null;

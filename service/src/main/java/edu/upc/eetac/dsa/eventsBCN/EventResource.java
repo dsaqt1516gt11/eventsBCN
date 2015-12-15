@@ -20,57 +20,6 @@ public class EventResource {
     @Context
     private SecurityContext securityContext;
 
-    @Path("/{id_event}/assist")
-    @POST
-    public void assistEvent(@PathParam("id_event") String idevent){
-        if(securityContext.isUserInRole("registered")==false)
-            throw new ForbiddenException("You are not a registered ");
-        EventDAO eventDAO = new EventDAOImpl();
-        Event event = null;
-        try {
-            event = eventDAO.getEventById(idevent);
-            if(event==null)
-                throw new NotFoundException("Event with id = "+idevent+" doesn't exist");
-            else{
-                String userid = securityContext.getUserPrincipal().getName();
-                try {
-                    eventDAO.assisttoEvent(userid, idevent);
-                }
-                catch (UserAlreadyAssisttoEvent e){
-                    throw new ForbiddenException();
-                }
-            }
-        }
-        catch (SQLException e) {
-            throw new InternalServerErrorException();
-        }
-    }
-
-    @Path("/{id_event}/wontassist")
-    @DELETE
-    public void wontassistEvent(@PathParam("id_event") String idevent){
-        if(securityContext.isUserInRole("registered")==false)
-            throw new ForbiddenException("You are not a registered ");
-        EventDAO eventDAO = new EventDAOImpl();
-        Event event = null;
-        try {
-            event = eventDAO.getEventById(idevent);
-            if(event==null)
-                throw new NotFoundException("Event with id = "+idevent+" doesn't exist");
-            else{
-                String userid = securityContext.getUserPrincipal().getName();
-                try {
-                    eventDAO.wontassit(userid, idevent);
-                } catch (UserWontAssistException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        catch (SQLException e) {
-            throw new InternalServerErrorException();
-        }
-    }
-
     @Path("/test")
     @GET
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)
@@ -96,12 +45,20 @@ public class EventResource {
             event = eventDAO.getEventById(id);
             if(event == null)
                 throw new NotFoundException("Event with id = "+id+" doesn't exist");
+            boolean check = false;
+            System.out.println("EVENTID: "+ id);
+            String userid = securityContext.getUserPrincipal().getName();
+            System.out.println("USERID: "+ userid);
+
+            check = eventDAO.checkUser(userid, id);
+            System.out.println("check:" + check);
+            event.setIsAssisted(check);
+
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
         return event;
     }
-
 
     @GET
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)

@@ -2,6 +2,7 @@ package edu.upc.eetac.dsa.eventsBCN.dao;
 
 import edu.upc.eetac.dsa.eventsBCN.entity.Event;
 import edu.upc.eetac.dsa.eventsBCN.entity.EventCollection;
+import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -81,6 +82,28 @@ public class EventDAOImpl implements EventDAO {
                 event.setLastModified(rs.getTimestamp("last_modified").getTime());
 
             }
+
+            stmt.close();
+            //consultar los usuarios que van ha asistir
+            UserDAO userDAO = new UserDAOImpl();
+            List<String> idusers = new ArrayList<>();
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(EventDAOQuery.GET_IDUSERS_ASSIST_TO_EVENT);
+            stmt.setString(1, id);
+            ResultSet resultSet = stmt.executeQuery();
+            System.out.println("Primera consulta, ahora vamos a guardar el resultado en una lista");
+            while (resultSet.next()) {
+                idusers.add(resultSet.getString("userid"));
+            }
+            List<User> users = new ArrayList<>();
+            for( String iduser : idusers ) {
+               users.add(userDAO.getUserById(iduser));
+            }
+            if (users!=null)
+                event.setUsers(users);
+            stmt.close();
+
         } catch (SQLException e) {
             throw e;
         } finally {

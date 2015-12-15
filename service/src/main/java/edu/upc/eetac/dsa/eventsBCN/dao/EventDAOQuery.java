@@ -14,4 +14,5 @@ public interface EventDAOQuery {
     public final static String GET_EVENTS_BY_COMPANY = "select hex(e.id) as id, e.title,e.description,e.date,e.photo,e.category,hex(e.companyid) as companyid, e.last_modified, e.creation_timestamp from events e where companyid = unhex(?) and date > CAST(CURRENT_TIMESTAMP AS DATE)";
     public final static String DELETE_EVENT = "delete from events where id=unhex(?)";
     public final static String UPDATE_EVENT = "update events set title=?, description=?, date=?, photo=?, category=? where id=unhex(?)";
+    public final static String GET_IDUSERS_ASSIST_TO_EVENT = "select hex(u.userid) as userid from user_event u where eventid=unhex(?)";
 }

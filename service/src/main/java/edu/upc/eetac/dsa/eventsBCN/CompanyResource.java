@@ -188,4 +188,55 @@ public class CompanyResource {
         }
         return event1;
     }
+
+    @Path("/{id_company}/events/{id_event}/assist")
+    @POST
+    public void assistEvent(@PathParam("id_event") String idevent){
+        if(securityContext.isUserInRole("registered")==false)
+            throw new ForbiddenException("You are not a registered ");
+        EventDAO eventDAO = new EventDAOImpl();
+        Event event = null;
+        try {
+            event = eventDAO.getEventById(idevent);
+            if(event==null)
+                throw new NotFoundException("Event with id = "+idevent+" doesn't exist");
+            else{
+                String userid = securityContext.getUserPrincipal().getName();
+                try {
+                    eventDAO.assisttoEvent(userid, idevent);
+                }
+                catch (UserAlreadyAssisttoEvent e){
+                    throw new ForbiddenException();
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+    }
+
+    @Path("/{id_company}/events/{id_event}/wontassist")
+    @DELETE
+    public void wontassistEvent(@PathParam("id_event") String idevent){
+        if(securityContext.isUserInRole("registered")==false)
+            throw new ForbiddenException("You are not a registered ");
+        EventDAO eventDAO = new EventDAOImpl();
+        Event event = null;
+        try {
+            event = eventDAO.getEventById(idevent);
+            if(event==null)
+                throw new NotFoundException("Event with id = "+idevent+" doesn't exist");
+            else{
+                String userid = securityContext.getUserPrincipal().getName();
+                try {
+                    eventDAO.wontassit(userid, idevent);
+                } catch (UserWontAssistException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+    }
 }
