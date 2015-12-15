@@ -13,6 +13,10 @@ insert into user_roles (userid, role) values (UNHEX('DDFEC26C737411E588E7001C42B
 insert into companies(id, name, description,location,latitude,longitude,userid) values(UNHEX('21EB861C42E700E588DDFEC26C737422'),'empresa1','la empresa numero 1','Campus Nord',1,-1,UNHEX('DBBFDC7D737411E588E7001C42B86E50'));
 insert into companies(id, name, description,location,latitude,longitude,userid) values(UNHEX('56EB861C42E700E588DDFEC26C737411'),'empresa2','la empresa numero 2','Campus Sud',2,-2,UNHEX('DDFEC26C737411E588E7001C42B86E50'));
 
+insert into auth_tokens (userid, token) values (UNHEX('5852AF3E7C0211E5AC27001C42B86E50'), UNHEX('5852AF3E7C0211E5AC27001C42B86E96'));
+insert into auth_tokens (userid, token) values (UNHEX('BACE58A3736C11E588E7001C42B86E50'), UNHEX('BACE58A3736C11E588E7001C42B86E97'));
+insert into auth_tokens (userid, token) values (UNHEX('DBBFDC7D737411E588E7001C42B86E50'), UNHEX('DBBFDC7D737411E588E7001C42B86E98'));
+insert into auth_tokens (userid, token) values (UNHEX('DDFEC26C737411E588E7001C42B86E50'), UNHEX('DDFEC26C737411E588E7001C42B86E99'));
 
 insert into events (id,title,description,date,photo,category,companyid) values(unhex('56E8B61C42E700E588DDFEC26C737411'),'evento1','este es el evento 1','2015-12-2 12:50','http://i1.cdnds.net/13/40/300x225/movies-american-wedding-sean-william-scott.jpg','bar',unhex('21EB861C42E700E588DDFEC26C737422'));
 insert into events (id,title,description,date,photo,category,companyid) values(unhex('56EB861C42E708E588DDFEC26C737411'),'evento2','este es el evento 2','2015-12-3 12:50','http://i1.cdnds.net/13/40/300x225/movies-american-wedding-sean-william-scott.jpg','cine',unhex('21EB861C42E700E588DDFEC26C737422'));
