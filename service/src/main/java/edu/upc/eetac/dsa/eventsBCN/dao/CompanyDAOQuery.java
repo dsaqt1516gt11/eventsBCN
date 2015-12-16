@@ -12,5 +12,5 @@ public interface CompanyDAOQuery {
     public final static String COMPARE_USER_EVENT =  "select hex(eventid) as eventid from user_event where userid=UNHEX(?) and eventid=UNHEX(?)";
     public final static String ASSIST_EVENT = "insert into user_event (userid, eventid) values (UNHEX(?), UNHEX(?))";
     public final static String ABSENT_EVENT = "delete from user_event where userid=unhex(?) and eventid=unhex(?)";
-    public final static String GET_COMPANY_FROM_USER = "select hex(c.id) as id from companies c where userid=unhex(?)";
+    public final static String GET_COMPANYID_FROM_USERID = "select hex(c.id) as id from companies c where c.userid=unhex(?)";
 }

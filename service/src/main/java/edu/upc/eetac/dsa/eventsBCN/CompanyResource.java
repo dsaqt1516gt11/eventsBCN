@@ -170,12 +170,16 @@ public class CompanyResource {
             throw new BadRequestException("entity is null");
         //Comprobar q empresa ha creado ese evento (pillar empresa q queremo modificar y la id del token y concuerda con la del path
         String companyid = companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName());
-        if(c_id!=companyid) throw new ForbiddenException("Error in company id");
+        System.out.println("C_ID: "+ c_id);
+        System.out.println("COMPANYID: "+ companyid);
+        if(!c_id.equals(companyid)) throw new ForbiddenException("Error in company id");
 
-        String segundacompanyid = companyDAO.getCompanyById(id).getId();
-        if(segundacompanyid!=companyid) throw new ForbiddenException("You haven't auth");
-
-
+        //comprovar q la compañia ha creado ese evento hacer metodo q pille la compañia de un evento
+        /*Company company = new Company();
+        company= companyDAO.getCompanyById(id);
+        String segundacompanyid = company.getId();
+        if(!segundacompanyid.equals(companyid)) throw new ForbiddenException("You haven't auth");
+        */
         Event event1=null;
         EventDAO eventDAO = new EventDAOImpl();
         try {

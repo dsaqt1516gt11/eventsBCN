@@ -162,7 +162,7 @@ public class CompanyDAOImpl implements CompanyDAO{
         try {
             connection = Database.getConnection();
 
-            stmt = connection.prepareStatement(CompanyDAOQuery.GET_COMPANY_FROM_USER);
+            stmt = connection.prepareStatement(CompanyDAOQuery.GET_COMPANYID_FROM_USERID);
             stmt.setString(1, userid);
 
             ResultSet rs = stmt.executeQuery();

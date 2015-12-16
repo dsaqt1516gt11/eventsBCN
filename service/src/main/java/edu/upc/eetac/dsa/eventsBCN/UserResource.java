@@ -91,6 +91,10 @@ public class UserResource {
         if(user == null)
             throw new BadRequestException("entity is null");
 
+        String role = null;
+        if(securityContext.isUserInRole("registered")) role ="registered";
+        else role="company";
+
         String userid = securityContext.getUserPrincipal().getName();
         System.out.println("ID:" +userid);
         if(!userid.equals(id))
@@ -99,7 +103,8 @@ public class UserResource {
         UserDAO userDAO = new UserDAOImpl();
         try {
             user.setId(id);
-            u = userDAO.updateProfile(user);
+            u = userDAO.updateProfile(user, role);
+            System.out.println("usuario actualizado!!");
             if(u == null)
                 throw new NotFoundException("User with id = "+id+" doesn't exist");
         } catch (SQLException e) {

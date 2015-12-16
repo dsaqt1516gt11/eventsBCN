@@ -68,7 +68,6 @@ public class UserDAOImpl implements UserDAO {
 
                 }
                 System.out.println("relaciones usuario categorias creadas");
-                connection.commit();
             }
         } catch (SQLException e) {
             throw e;
@@ -168,7 +167,6 @@ public class UserDAOImpl implements UserDAO {
                 user.setPhoto(res.getString("photo"));
                 System.out.println("categorias principales");
             }
-            System.out.println("MEC");
 
             //pillar las categoiras de un usuario
             stmt.close();
@@ -204,7 +202,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User updateProfile(User user) throws SQLException {
+    public User updateProfile(User user, String role) throws SQLException {
         User u = null;
 
         Connection connection = null;
@@ -221,6 +219,27 @@ public class UserDAOImpl implements UserDAO {
             int rows = stmt.executeUpdate();
             if (rows == 1)
                 u = getUserById(user.getId());
+
+            stmt.close();
+            if(role.equals("registered")) {
+                stmt = connection.prepareStatement(UserDAOQuery.DELETE_CATEGORIES);
+                stmt.setString(1, user.getId());
+                stmt.executeUpdate();
+                System.out.println("Categorias eliminadas");
+
+                for (String nombre : user.getCategories()) {
+                    if (nombre != null && nombre != "") {
+                        stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
+                        stmt.setString(1, user.getId());
+                        stmt.setString(2, nombre);
+                        stmt.executeUpdate();
+                    }
+                }
+                System.out.println("relaciones usuario categorias creadas");
+
+            }
+
+
         } catch (SQLException e) {
             throw e;
         } finally {

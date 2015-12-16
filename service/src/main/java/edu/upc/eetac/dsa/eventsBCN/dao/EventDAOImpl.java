@@ -317,19 +317,12 @@ public class EventDAOImpl implements EventDAO {
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(EventDAOQuery.UPDATE_EVENT);
-            System.out.println(event.getTitle());
-            System.out.println(event.getDescription());
-            System.out.println(event.getDate());
-            System.out.println(event.getPhoto());
-            System.out.println( event.getCategory());
-            System.out.println(event.getId());
             stmt.setString(1, event.getTitle());
             stmt.setString(2, event.getDescription());
             stmt.setString(3, event.getDate());
             stmt.setString(4, event.getPhoto());
             stmt.setString(5, event.getCategory());
             stmt.setString(6, event.getId());
-
 
             int rows = stmt.executeUpdate();
             if (rows == 1)
