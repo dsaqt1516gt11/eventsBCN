@@ -83,7 +83,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserById(String id) throws SQLException{
-        System.out.println("Estoy dentro de getUserById");
+        //System.out.println("Estoy dentro de getUserById");
         // Modelo a devolver
         User user = null;
 
@@ -115,15 +115,15 @@ public class UserDAOImpl implements UserDAO {
             stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
             stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
-            System.out.println("Primera consulta, ahroa vamos a guardar el resultado en una lista");
+            //System.out.println("Primera consulta, ahroa vamos a guardar el resultado en una lista");
             while (rs.next()) {
-                System.out.println("antes de añadir");
-                System.out.println(rs.getString("category"));
+                //System.out.println("antes de añadir");
+                //System.out.println(rs.getString("category"));
                 categories.add(rs.getString("category"));
-                System.out.println("Estamos dentro del bucle");
+                //System.out.println("Estamos dentro del bucle");
             }
-            System.out.println("cojo categorias");
-            System.out.println(categories);
+            //System.out.println("cojo categorias");
+            //System.out.println(categories);
             user.setCategories(categories);
         } catch (SQLException e) {
             // Relanza la excepción
