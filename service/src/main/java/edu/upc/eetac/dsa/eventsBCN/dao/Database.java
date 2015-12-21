@@ -19,12 +19,12 @@ public class Database {
     private DataSource ds;
 
     private Database() {
-        PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+        PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("hikari");
         Enumeration<String> keys = prb.getKeys();
         Properties properties = new Properties();
         while(keys.hasMoreElements()){
             String key = keys.nextElement();
-            properties.put(key, prb.getString(key));
+            properties.setProperty(key, prb.getString(key));
         }
 
         //HikariConfig config = new HikariConfig(Database.class.getClassLoader().getResource("hikari.properties").getFile());
