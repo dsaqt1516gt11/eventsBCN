@@ -21,11 +21,10 @@ public class EventDAOImpl implements EventDAO {
         PreparedStatement stmt = null;
         String id = null;
         try {
+            connection = Database.getConnection();
             Event ev = getEventByTitle(event.getTitle());
             if (ev != null)
                 throw new EventAlreadyExistsException();
-
-            connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
             ResultSet rs = stmt.executeQuery();
@@ -64,7 +63,6 @@ public class EventDAOImpl implements EventDAO {
         PreparedStatement stmt = null;
         try {
             connection = Database.getConnection();
-
             stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_ID);
             stmt.setString(1, id);
 
@@ -87,7 +85,6 @@ public class EventDAOImpl implements EventDAO {
             //consultar los usuarios que van ha asistir
             UserDAO userDAO = new UserDAOImpl();
             List<String> idusers = new ArrayList<>();
-            connection = Database.getConnection();
 
             stmt = connection.prepareStatement(EventDAOQuery.GET_IDUSERS_ASSIST_TO_EVENT);
             stmt.setString(1, id);
@@ -122,7 +119,6 @@ public class EventDAOImpl implements EventDAO {
         PreparedStatement stmt = null;
         try {
             connection = Database.getConnection();
-
             stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_TITLE);
             stmt.setString(1, title);
 
@@ -156,10 +152,10 @@ public class EventDAOImpl implements EventDAO {
         EventCollection eventCollection = new EventCollection();
 
         Connection connection = null;
+
         PreparedStatement stmt = null;
         try {
             connection = Database.getConnection();
-
             stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS);
             ResultSet rs = stmt.executeQuery();
 
@@ -194,9 +190,10 @@ public class EventDAOImpl implements EventDAO {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
+            connection = Database.getConnection();
             //consultar las categorias de un usuario
             List<String> categories = new ArrayList<>();
-            connection = Database.getConnection();
+
 
             stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
             stmt.setString(1, id);
@@ -208,13 +205,11 @@ public class EventDAOImpl implements EventDAO {
                 categories.add(rs.getString("category"));
                 System.out.println("Estamos dentro del bucle");
             }
-            stmt.close();
             System.out.println("cojo categorias");
             System.out.println(categories);
 
             for (String category : categories) {
                 System.out.println(category);
-                connection = Database.getConnection();
                 stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_CATEGORY);
                 stmt.setString(1, category);
                 ResultSet res = stmt.executeQuery();
@@ -234,7 +229,6 @@ public class EventDAOImpl implements EventDAO {
                     eventCollection.setOldestTimestamp(event.getLastModified());
                     eventCollection.getEvents().add(event);
                 }
-                stmt.close();
             }
         } catch (SQLException e) {
             throw e;

@@ -37,7 +37,6 @@ public class UserDAOImpl implements UserDAO {
                 throw new SQLException();
 
             connection.setAutoCommit(false);
-            stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.CREATE_USER);
             stmt.setString(1, user.getId());
             stmt.setString(2, user.getName());
@@ -47,14 +46,12 @@ public class UserDAOImpl implements UserDAO {
             stmt.executeUpdate();
             System.out.println("Usuario creado");
 
-            stmt.close();
             stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE);
             stmt.setString(1, user.getId());
             stmt.setString(2, role);
             stmt.executeUpdate();
             System.out.println("Rol asignado");
 
-            stmt.close();
             System.out.println(role);
             if(role.equals("registered")) {
                 System.out.println("entro al if");
@@ -106,11 +103,8 @@ public class UserDAOImpl implements UserDAO {
                 user.setPhoto(res.getString("photo"));
             }
 
-            //pillar las categoiras de un usuario
-            stmt.close();
             //consultar las categorias de un usuario
             List<String> categories = new ArrayList<>();
-            connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
             stmt.setString(1, id);
@@ -169,11 +163,9 @@ public class UserDAOImpl implements UserDAO {
             }
 
             //pillar las categoiras de un usuario
-            stmt.close();
             if(user!=null) {
                 //consultar las categorias de un usuario
                 List<String> categories = new ArrayList<>();
-                connection = Database.getConnection();
 
                 stmt = connection.prepareStatement(UserDAOQuery.CATEGORIES_BY_USERID);
                 stmt.setString(1, user.getId());
@@ -220,7 +212,6 @@ public class UserDAOImpl implements UserDAO {
             if (rows == 1)
                 u = getUserById(user.getId());
 
-            stmt.close();
             if(role.equals("registered")) {
                 stmt = connection.prepareStatement(UserDAOQuery.DELETE_CATEGORIES);
                 stmt.setString(1, user.getId());
@@ -254,7 +245,6 @@ public class UserDAOImpl implements UserDAO {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
-
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.GET_PASSWORD);
@@ -287,13 +277,12 @@ public class UserDAOImpl implements UserDAO {
         PreparedStatement stmt = null;
 
         try {
+            connection = Database.getConnection();
             boolean isFollowed = checkFollow(userfollowid,userFollowerid);
             if (isFollowed == true)
                 throw new UserAlreadyFollowedException();
 
             System.out.println(isFollowed);
-            connection = Database.getConnection();
-
             stmt = connection.prepareStatement(UserDAOQuery.FOLLOW_USER);
             stmt.setString(1, userfollowid);
             stmt.setString(2, userFollowerid);
@@ -317,13 +306,12 @@ public class UserDAOImpl implements UserDAO {
         PreparedStatement stmt = null;
 
         try {
-
+            connection = Database.getConnection();
             boolean isFollowed = checkFollow(userfollowid,userFollowerid);
             if (isFollowed != true)
                 throw new UserNotFollowedException();
 
             System.out.println(isFollowed);
-            connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UNFOLLOW_USER);
             stmt.setString(1, userfollowid);
