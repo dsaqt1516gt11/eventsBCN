@@ -72,6 +72,20 @@ public class CompanyResource {
         return company;
     }
 
+    @GET
+    @Produces(EventsBCNMediaType.EVENTSBCN_COMPANY)
+    public Company getCompanybyUserID(@QueryParam("userid") String userid) {
+        CompanyDAO companyDAO = new CompanyDAOImpl();
+        Company c = null;
+        try {
+            c = companyDAO.getCompanyById(companyDAO.companyidFromUserid(userid));
+        } catch (SQLException e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+        if (c == null)
+            throw new NotFoundException("Company with name = " + userid + " doesn't exist");
+        return c;
+    }
 
     @Path("/{id}")
     @PUT
