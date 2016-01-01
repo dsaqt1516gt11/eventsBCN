@@ -31,7 +31,6 @@ public class EventResource {
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
-
         return eventCollection;
     }
 

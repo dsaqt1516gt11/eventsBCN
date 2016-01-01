@@ -81,7 +81,6 @@ public class EventDAOImpl implements EventDAO {
 
             }
 
-            stmt.close();
             //consultar los usuarios que van ha asistir
             UserDAO userDAO = new UserDAOImpl();
             List<String> idusers = new ArrayList<>();
@@ -99,7 +98,6 @@ public class EventDAOImpl implements EventDAO {
             }
             if (users!=null)
                 event.setUsers(users);
-            stmt.close();
 
         } catch (SQLException e) {
             throw e;

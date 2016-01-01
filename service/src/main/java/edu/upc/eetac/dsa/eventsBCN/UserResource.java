@@ -3,15 +3,24 @@ package edu.upc.eetac.dsa.eventsBCN;
 import edu.upc.eetac.dsa.eventsBCN.auth.AuthTokenDAOImpl;
 import edu.upc.eetac.dsa.eventsBCN.dao.*;
 import edu.upc.eetac.dsa.eventsBCN.entity.AuthToken;
-import edu.upc.eetac.dsa.eventsBCN.entity.Event;
 import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.UUID;
+import javax.imageio.ImageIO;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 
 /**
  * Created by Aitor on 25/10/15.
@@ -20,30 +29,56 @@ import java.util.List;
 @Path("users")
 public class UserResource {
 
+    @Context
+    private Application app;
     @POST
-    @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
+    @Consumes({EventsBCNMediaType.EVENTSBCN_USER, MULTIPART_FORM_DATA})
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
-    public Response registerUser(User user, @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
-        System.out.println(user.getCategories());
-        if (user==null) {
-            System.out.println("error user==null");
+    public Response registerUser(User user, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition , @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
+        if (user==null || role==null) {
             throw new BadRequestException("all parameters are mandatory");
         }
+        UUID uuid = writeAndConvertImage(image);
         UserDAO userDAO = new UserDAOImpl();
-        User u = null;
         AuthToken authenticationToken = null;
         try {
-            u = userDAO.createUser(user, role);
+            user.setPhoto(uuid.toString());
+            userDAO.createUser(user, role);
 
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {
             throw new WebApplicationException("Name already exists", Response.Status.CONFLICT);
         } catch (SQLException e) {
             throw new InternalServerErrorException();
+        }catch (NullPointerException e){
+            System.out.println(e.toString());
         }
+
         URI uri = new URI(uriInfo.getAbsolutePath().toString() + "/" + user.getId());
         System.out.println("torna el token a l'usuari:" + uri);
         return Response.created(uri).type(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN).entity(authenticationToken).build();
+    }
+
+    private UUID writeAndConvertImage(InputStream file) {
+
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(file);
+
+        } catch (IOException e) {
+            throw new InternalServerErrorException(
+                    "Something has been wrong when reading the file.");
+        }
+        UUID uuid = UUID.randomUUID();
+        String filename = uuid.toString() + ".png";
+        try {
+            ImageIO.write(image, "png", new File(app.getProperties().get("uploadFolder") + filename));
+        } catch (IOException e) {
+            throw new InternalServerErrorException(
+                    "Something has been wrong when converting the file.");
+        }
+
+        return uuid;
     }
 
 
@@ -148,7 +183,4 @@ public class UserResource {
         }
 
     }
-
-
-
 }

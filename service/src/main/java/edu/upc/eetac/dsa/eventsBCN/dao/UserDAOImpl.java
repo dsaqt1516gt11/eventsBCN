@@ -2,6 +2,7 @@ package edu.upc.eetac.dsa.eventsBCN.dao;
 
 import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

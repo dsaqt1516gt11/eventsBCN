@@ -2,6 +2,7 @@ package edu.upc.eetac.dsa.eventsBCN.dao;
 
 import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
