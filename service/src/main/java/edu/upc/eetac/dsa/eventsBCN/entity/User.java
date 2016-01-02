@@ -18,8 +18,21 @@ public class User {
     private String password;
     private String email;
     private String photo;
+    private String photoURL;
     private List<String> categories;
     private boolean isFollowed;
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    public void setFollowed(boolean followed) {
+        isFollowed = followed;
+    }
 
     public boolean isFollowed() {
         return isFollowed;

@@ -17,14 +17,13 @@ import java.util.*;
  */
 public class UserDAOImpl implements UserDAO {
     @Override
-    public User createUser(User user, String role) throws SQLException, UserAlreadyExistsException{
+    public User createUser(String name, String password, String email, String photo, List<String> categories, String role) throws SQLException, UserAlreadyExistsException{
         System.out.println("Estoy dentro de createUser");
         Connection connection = null;
         PreparedStatement stmt = null;
         String id = null;
         try {
-            System.out.println(user.getName());
-            User u = getUserByName(user.getName());
+            User u = getUserByName(name);
             if (u != null)
                 throw new UserAlreadyExistsException();
             System.out.println("De vuelta a createUser");
@@ -33,22 +32,22 @@ public class UserDAOImpl implements UserDAO {
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
             ResultSet rs = stmt.executeQuery();
             if (rs.next())
-                user.setId(rs.getString(1));
+                id=rs.getString(1);
             else
                 throw new SQLException();
 
             connection.setAutoCommit(false);
             stmt = connection.prepareStatement(UserDAOQuery.CREATE_USER);
-            stmt.setString(1, user.getId());
-            stmt.setString(2, user.getName());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getEmail());
-            stmt.setString(5, user.getPhoto());
+            stmt.setString(1, id);
+            stmt.setString(2, name);
+            stmt.setString(3, password);
+            stmt.setString(4, email);
+            stmt.setString(5, photo);
             stmt.executeUpdate();
             System.out.println("Usuario creado");
 
             stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_ROLE);
-            stmt.setString(1, user.getId());
+            stmt.setString(1, id);
             stmt.setString(2, role);
             stmt.executeUpdate();
             System.out.println("Rol asignado");
@@ -56,10 +55,10 @@ public class UserDAOImpl implements UserDAO {
             System.out.println(role);
             if(role.equals("registered")) {
                 System.out.println("entro al if");
-                for (String nombre : user.getCategories()) {
+                for (String nombre : categories) {
                     if (nombre != null && nombre != "") {
                         stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
-                        stmt.setString(1, user.getId());
+                        stmt.setString(1, id);
                         stmt.setString(2, nombre);
                         stmt.executeUpdate();
                     }
@@ -76,12 +75,11 @@ public class UserDAOImpl implements UserDAO {
                 connection.close();
             }
         }
-        return getUserByName(user.getName());
+        return getUserByName(name);
     }
 
     @Override
     public User getUserById(String id) throws SQLException{
-        //System.out.println("Estoy dentro de getUserById");
         // Modelo a devolver
         User user = null;
 
@@ -119,7 +117,7 @@ public class UserDAOImpl implements UserDAO {
             }
             //System.out.println("cojo categorias");
             //System.out.println(categories);
-            user.setCategories(categories);
+            if(categories!=null) user.setCategories(categories);
         } catch (SQLException e) {
             // Relanza la excepción
             throw e;
@@ -180,7 +178,9 @@ public class UserDAOImpl implements UserDAO {
                 }
                 System.out.println("cojo categorias");
                 System.out.println(categories);
-                user.setCategories(categories);
+                System.out.println("1");
+                if (categories!=null) user.setCategories(categories);
+                System.out.println("2");
             }
         } catch (SQLException e) {
             // Relanza la excepción

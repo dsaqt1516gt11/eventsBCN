@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Aitor on 24/10/15.
  */
 public interface UserDAO {
-    public User createUser(User user, String role)  throws SQLException, UserAlreadyExistsException;
+    public User createUser(String name, String password, String email, String photo, List<String> categories, String role)  throws SQLException, UserAlreadyExistsException;
 
     public User getUserById(String id) throws SQLException;
 

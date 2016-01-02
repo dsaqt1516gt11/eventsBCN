@@ -7,12 +7,13 @@ import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.UUID;
+import java.util.*;
 import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -29,22 +30,23 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 @Path("users")
 public class UserResource {
 
-    @Context
-    private Application app;
     @POST
-    @Consumes({EventsBCNMediaType.EVENTSBCN_USER, MULTIPART_FORM_DATA})
+    @Consumes(MULTIPART_FORM_DATA)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
-    public Response registerUser(User user, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition , @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
-        if (user==null || role==null) {
+    public Response registerUser(@FormDataParam("name") String name, @FormDataParam("password") String password, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition , @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
+        if (name==null || password==null || email==null || categories==null || role==null ) {
             throw new BadRequestException("all parameters are mandatory");
         }
+        User user =null;
+        System.out.println("CATEGORIAS: "+ categories);
         UUID uuid = writeAndConvertImage(image);
+        System.out.println(fileDisposition.getFileName());
         UserDAO userDAO = new UserDAOImpl();
         AuthToken authenticationToken = null;
         try {
-            user.setPhoto(uuid.toString());
-            userDAO.createUser(user, role);
-
+            System.out.println("NOMBRE DEL FICHERO: " + uuid.toString() + ".png");
+            user =userDAO.createUser(name,password,email,uuid.toString() + ".png", categories,role);
+            System.out.println("3");
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {
             throw new WebApplicationException("Name already exists", Response.Status.CONFLICT);
@@ -70,9 +72,15 @@ public class UserResource {
                     "Something has been wrong when reading the file.");
         }
         UUID uuid = UUID.randomUUID();
+        System.out.println("NOMBRE QUE QUIERE PONER AL FICHERO" + uuid.toString());
         String filename = uuid.toString() + ".png";
+        System.out.println(filename);
         try {
-            ImageIO.write(image, "png", new File(app.getProperties().get("uploadFolder") + filename));
+            String path=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            path = prb.getString("uploadFolder");
+            System.out.println("EL DIRECTORIO ES: "+ path);
+            ImageIO.write(image, "png", new File(path + filename));
         } catch (IOException e) {
             throw new InternalServerErrorException(
                     "Something has been wrong when converting the file.");
@@ -89,6 +97,10 @@ public class UserResource {
         User user = null;
         try {
             user = (new UserDAOImpl()).getUserById(id);
+            String url=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            url = prb.getString("imgBaseURL");
+            user.setPhotoURL(url + user.getPhoto());
         } catch (SQLException e) {
             throw new InternalServerErrorException(e.getMessage());
         }
@@ -107,6 +119,10 @@ public class UserResource {
         User user = null;
         try {
             user = (new UserDAOImpl()).getUserByName(name);
+            String url=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            url = prb.getString("imgBaseURL");
+            user.setPhotoURL(url + user.getPhoto());
         } catch (SQLException e) {
             throw new InternalServerErrorException(e.getMessage());
         }
