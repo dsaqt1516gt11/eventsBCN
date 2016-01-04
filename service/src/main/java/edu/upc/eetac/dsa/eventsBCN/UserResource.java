@@ -7,7 +7,6 @@ import edu.upc.eetac.dsa.eventsBCN.entity.User;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -34,7 +33,7 @@ public class UserResource {
     @Consumes(MULTIPART_FORM_DATA)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
     public Response registerUser(@FormDataParam("name") String name, @FormDataParam("password") String password, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition , @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
-        if (name==null || password==null || email==null || categories==null || role==null ) {
+        if (name==null || password==null || email==null || categories==null || role==null || image==null) {
             throw new BadRequestException("all parameters are mandatory");
         }
         User user =null;
@@ -138,22 +137,27 @@ public class UserResource {
     @PUT
     @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
     @Produces(EventsBCNMediaType.EVENTSBCN_USER)
-    public User updateUser(@PathParam("id") String id, User user) {
-        if(user == null)
+    public User updateUser(@PathParam("id") String id, @FormDataParam("name") String name, @FormDataParam("password") String password, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition) {
+        if(name==null || password==null || email==null || categories==null || image==null )
             throw new BadRequestException("entity is null");
 
         String role = null;
         if(securityContext.isUserInRole("registered")) role ="registered";
         else role="company";
-
+        UUID uuid = writeAndConvertImage(image);
         String userid = securityContext.getUserPrincipal().getName();
         System.out.println("ID:" +userid);
         if(!userid.equals(id))
             throw new ForbiddenException("operation not allowed");
+        User user = null;
         User u = null;
         UserDAO userDAO = new UserDAOImpl();
         try {
             user.setId(id);
+            user.setName(name);
+            user.setPassword(password);
+            user.setPhoto(uuid.toString());
+            user.setEmail(email);
             u = userDAO.updateProfile(user, role);
             System.out.println("usuario actualizado!!");
             if(u == null)

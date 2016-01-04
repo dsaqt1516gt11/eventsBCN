@@ -51,11 +51,12 @@ public class EventResource {
 
             check = eventDAO.checkUser(userid, id);
             System.out.println("check:" + check);
-            event.setIsAssisted(check);
+            event.setAssisted(check);
 
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
+        System.out.println("EL PUTO ASSIST:" + event.isAssisted());
         return event;
     }
 

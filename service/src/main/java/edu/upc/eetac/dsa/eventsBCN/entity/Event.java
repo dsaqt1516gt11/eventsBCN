@@ -37,14 +37,6 @@ public class Event {
     private List<User> users = new ArrayList<>();
     private boolean isAssisted;
 
-    public boolean isAssisted() {
-        return isAssisted;
-    }
-
-    public void setIsAssisted(boolean isAssisted) {
-        this.isAssisted = isAssisted;
-    }
-
     public List<Link> getLinks() {
         return links;
     }
@@ -131,5 +123,13 @@ public class Event {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public boolean isAssisted() {
+        return isAssisted;
+    }
+
+    public void setAssisted(boolean assisted) {
+        isAssisted = assisted;
     }
 }
