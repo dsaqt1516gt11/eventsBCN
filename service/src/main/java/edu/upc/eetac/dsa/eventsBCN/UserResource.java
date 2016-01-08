@@ -162,6 +162,10 @@ public class UserResource {
             System.out.println("usuario actualizado!!");
             if(u == null)
                 throw new NotFoundException("User with id = "+id+" doesn't exist");
+            String url=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            url = prb.getString("imgBaseURL");
+            u.setPhotoURL(url + u.getPhoto());
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
