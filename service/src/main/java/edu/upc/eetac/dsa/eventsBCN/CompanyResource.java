@@ -1,14 +1,21 @@
 package edu.upc.eetac.dsa.eventsBCN;
 
-import edu.upc.eetac.dsa.eventsBCN.auth.AuthTokenDAOImpl;
 import edu.upc.eetac.dsa.eventsBCN.dao.*;
 import edu.upc.eetac.dsa.eventsBCN.entity.*;
+import org.glassfish.grizzly.utils.EchoFilter;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.*;
 
 /**
  * Created by Juan on 30/11/15.
@@ -116,18 +123,29 @@ public class CompanyResource {
     @POST
     @Consumes(EventsBCNMediaType.EVENTSBCN_EVENT)
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT)
-    public Event createEvent(Event event, @PathParam("id_company") String id_company) throws URISyntaxException, SQLException {
+    public Event createEvent(@FormDataParam("title") String title, @FormDataParam("description") String description, @FormDataParam("date") String date, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition, @FormDataParam("category") String category, @PathParam("id_company") String id_company) throws URISyntaxException, SQLException {
         CompanyDAO companyDAO = new CompanyDAOImpl();
         EventDAO eventDAO = new EventDAOImpl();
         Event ev = null;
 
-        if(event== null)
+        if(title== null ||description== null ||date== null ||image== null ||category== null)
             throw new BadRequestException("all parameters are mandatory");
         if(securityContext.isUserInRole("company")==false)
             throw new ForbiddenException("You are not a company bro ;)");
+        Event event = null;
+        event.setTitle(title);
+        event.setDescription(description);
+        event.setDate(date);
+        event.setCategory(category);
+        UUID uuid = writeAndConvertImage(image);
+        event.setPhoto(uuid.toString() + ".png");
         event.setCompanyid(companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName()));
         try {
             ev = eventDAO.createEvent(event);
+            String url=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            url = prb.getString("imgBaseURLevento");
+            ev.setPhotoURL(url + ev.getPhoto());
         }catch (EventAlreadyExistsException e) {
             throw new WebApplicationException("Event with that title already exists", Response.Status.CONFLICT);
         }catch (SQLException e) {
@@ -167,6 +185,14 @@ public class CompanyResource {
         try {
             if (before && timestamp == 0) timestamp = System.currentTimeMillis();
             eventCollection = eventDAO.getEventsByCompany(idcompany);
+
+            List<Event> events = eventCollection.getEvents();
+            for( Event event : events ) {
+                String url=null;
+                PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+                url = prb.getString("imgBaseURLevento");
+                event.setPhotoURL(url + event.getPhoto());
+            }
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
@@ -256,5 +282,33 @@ public class CompanyResource {
         catch (SQLException e) {
             throw new InternalServerErrorException();
         }
+    }
+
+    private UUID writeAndConvertImage(InputStream file) {
+
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(file);
+
+        } catch (IOException e) {
+            throw new InternalServerErrorException(
+                    "Something has been wrong when reading the file.");
+        }
+        UUID uuid = UUID.randomUUID();
+        System.out.println("NOMBRE QUE QUIERE PONER AL FICHERO" + uuid.toString());
+        String filename = uuid.toString() + ".png";
+        System.out.println(filename);
+        try {
+            String path=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            path = prb.getString("uploadFolder");
+            System.out.println("EL DIRECTORIO ES: "+ path);
+            ImageIO.write(image, "png", new File(path + filename));
+        } catch (IOException e) {
+            throw new InternalServerErrorException(
+                    "Something has been wrong when converting the file.");
+        }
+
+        return uuid;
     }
 }

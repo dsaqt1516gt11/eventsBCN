@@ -30,12 +30,21 @@ public class Event {
     private String description;
     private String date;
     private String photo;
+    private String photoURL;
     private String category;
     private String companyid;
     private long lastModified;
     private long creationTimestamp;
     private List<User> users = new ArrayList<>();
     private boolean isAssisted;
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
 
     public List<Link> getLinks() {
         return links;

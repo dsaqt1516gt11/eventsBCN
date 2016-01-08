@@ -7,9 +7,18 @@ import edu.upc.eetac.dsa.eventsBCN.dao.UserWontAssistException;
 import edu.upc.eetac.dsa.eventsBCN.entity.Event;
 import edu.upc.eetac.dsa.eventsBCN.entity.EventCollection;
 
+import javax.imageio.ImageIO;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
+import java.util.UUID;
 
 /**
  * Created by juan on 1/12/15.
@@ -53,6 +62,11 @@ public class EventResource {
             System.out.println("check:" + check);
             event.setAssisted(check);
 
+            String url=null;
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            url = prb.getString("imgBaseURLevento");
+            event.setPhotoURL(url + event.getPhoto());
+
         } catch (SQLException e) {
             throw new InternalServerErrorException();
         }
@@ -70,6 +84,14 @@ public class EventResource {
             String userid = securityContext.getUserPrincipal().getName();
             System.out.println("EL ID es" + userid);
             eventCollection = eventDAO.getEventsByCategories(userid);
+
+            List<Event> events = eventCollection.getEvents();
+            for( Event event : events ) {
+                String url=null;
+                PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+                url = prb.getString("imgBaseURLevento");
+                event.setPhotoURL(url + event.getPhoto());
+            }
         } catch (SQLException e) {
 
             throw new InternalServerErrorException();
