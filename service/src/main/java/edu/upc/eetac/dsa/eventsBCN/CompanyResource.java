@@ -301,7 +301,7 @@ public class CompanyResource {
         try {
             String path=null;
             PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
-            path = prb.getString("uploadFolder");
+            path = prb.getString("uploadFolderEvents");
             System.out.println("EL DIRECTORIO ES: "+ path);
             ImageIO.write(image, "png", new File(path + filename));
         } catch (IOException e) {
