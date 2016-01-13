@@ -162,12 +162,12 @@ public class CompanyResource {
         EventDAO eventDAO = new EventDAOImpl();
 
         if(securityContext.isUserInRole("company")==false)
-            throw new ForbiddenException("You are not a company bro ;)");
+            throw new NotAuthorizedException("You are not a company bro ;)");
 
         String companyid = companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName());
         System.out.println(companyid);
         System.out.println(c_id);
-        if(c_id!=companyid) throw new ForbiddenException("Error in company id");
+        if(!c_id.equals(companyid)) throw new ForbiddenException("Error in company id");
         try {
             if(!eventDAO.deleteEvent(id))
                 throw new NotFoundException("Event with id = "+id+" doesn't exist or you didn't create this event");
@@ -179,11 +179,11 @@ public class CompanyResource {
     @Path("/{id_company}/events")
     @GET
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION)
-    public EventCollection getEventsCompany(@PathParam("id_company") String idcompany ,@QueryParam("timestamp") long timestamp, @DefaultValue("true") @QueryParam("before") boolean before) {
+    public EventCollection getEventsCompany(@PathParam("id_company") String idcompany) {
         EventCollection eventCollection = null;
         EventDAO eventDAO = new EventDAOImpl();
         try {
-            if (before && timestamp == 0) timestamp = System.currentTimeMillis();
+
             eventCollection = eventDAO.getEventsByCompany(idcompany);
 
             List<Event> events = eventCollection.getEvents();

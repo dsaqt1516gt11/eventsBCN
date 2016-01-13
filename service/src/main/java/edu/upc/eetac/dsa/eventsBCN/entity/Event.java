@@ -19,8 +19,11 @@ public class Event {
             @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "Beeter Root API"),
             @InjectLink(resource = EventResource.class, method = "getEvent", style = InjectLink.Style.ABSOLUTE, rel = "self event", title = "Event", bindings = @Binding(name = "id", value = "${instance.id}")),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
-            //@InjectLink(resource = UserResource.class, method = "getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", bindings = @Binding(name = "id", value = "${instance.userid}")),
-            @InjectLink(resource = CompanyResource.class, method = "getCompany", style = InjectLink.Style.ABSOLUTE, rel = "company-profile", title = "Company", bindings = @Binding(name = "id", value = "${instance.companyid}")),
+            @InjectLink(resource = CompanyResource.class, method = "assistEvent", style = InjectLink.Style.ABSOLUTE, rel = "assist", title = "Asistir", bindings = {@Binding(name = "id_company", value = "${instance.companyid}"), @Binding(name = "id_event", value = "${instance.id}")}),
+            @InjectLink(resource = CompanyResource.class, method = "wontassistEvent", style = InjectLink.Style.ABSOLUTE, rel = "wontassist", title = " Dejar de Asistir", bindings = {@Binding(name = "id_company", value = "${instance.companyid}"), @Binding(name = "id_event", value = "${instance.id}")}),
+            @InjectLink(resource = CompanyResource.class, method = "getCompanybyId", style = InjectLink.Style.ABSOLUTE, rel = "company-profile", title = "Company", bindings = @Binding(name = "id", value = "${instance.companyid}")),
+            @InjectLink(resource = CompanyResource.class, method = "deleteEvent", style = InjectLink.Style.ABSOLUTE, rel = "delete", title = "delete event", bindings = {@Binding(name = "id_company", value = "${instance.companyid}"), @Binding(name = "id", value = "${instance.id}")}),
+
 
 
     })

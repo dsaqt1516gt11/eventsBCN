@@ -2,6 +2,10 @@ package edu.upc.eetac.dsa.eventsBCN.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import edu.upc.eetac.dsa.eventsBCN.CompanyResource;
+import edu.upc.eetac.dsa.eventsBCN.EventsBCNMediaType;
+import org.glassfish.jersey.linking.Binding;
+import org.glassfish.jersey.linking.InjectLink;
 import org.glassfish.jersey.linking.InjectLinks;
 
 import javax.ws.rs.core.Link;
@@ -14,6 +18,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Company {
     @InjectLinks({
+            @InjectLink(resource = CompanyResource.class, method = "getEventsCompany", style = InjectLink.Style.ABSOLUTE, rel = "companyevents", title = "Eventos de company", type= EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION, bindings = @Binding(name = "id_company", value = "${instance.id}")),
 
     })
     private List<Link> links;
