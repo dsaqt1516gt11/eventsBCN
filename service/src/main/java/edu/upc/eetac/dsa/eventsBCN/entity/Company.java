@@ -22,6 +22,7 @@ public class Company {
     @InjectLinks({
             @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "eventsBCN Root API"),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
+            @InjectLink(resource = CompanyResource.class, method = "createEvent", style = InjectLink.Style.ABSOLUTE, rel = "crear evento", title = "crear evento", type= EventsBCNMediaType.EVENTSBCN_EVENT, bindings = @Binding(name = "id_company", value = "${instance.id}")),
             @InjectLink(resource = CompanyResource.class, method = "getEventsCompany", style = InjectLink.Style.ABSOLUTE, rel = "companyevents", title = "Eventos de company", type= EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION, bindings = @Binding(name = "id_company", value = "${instance.id}")),
 
     })

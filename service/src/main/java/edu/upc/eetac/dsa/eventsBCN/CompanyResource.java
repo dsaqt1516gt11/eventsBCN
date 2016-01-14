@@ -121,27 +121,36 @@ public class CompanyResource {
 
     @Path("/{id_company}/events")
     @POST
-    @Consumes(EventsBCNMediaType.EVENTSBCN_EVENT)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(EventsBCNMediaType.EVENTSBCN_EVENT)
     public Event createEvent(@FormDataParam("title") String title, @FormDataParam("description") String description, @FormDataParam("date") String date, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition, @FormDataParam("category") String category, @PathParam("id_company") String id_company) throws URISyntaxException, SQLException {
         CompanyDAO companyDAO = new CompanyDAOImpl();
         EventDAO eventDAO = new EventDAOImpl();
         Event ev = null;
-
+        UUID uuid = writeAndConvertImage(image);
+        System.out.println("LLEGO A ENTRAR");
         if(title== null ||description== null ||date== null ||image== null ||category== null)
             throw new BadRequestException("all parameters are mandatory");
         if(securityContext.isUserInRole("company")==false)
             throw new ForbiddenException("You are not a company bro ;)");
-        Event event = null;
+        System.out.println("PETO3");
+        Event event = new Event();
         event.setTitle(title);
+        System.out.println(title);
         event.setDescription(description);
+        System.out.println(description);
         event.setDate(date);
+        System.out.println(date);
         event.setCategory(category);
-        UUID uuid = writeAndConvertImage(image);
+        System.out.println(category);
+        System.out.println("PETO_IMAGEN");
         event.setPhoto(uuid.toString() + ".png");
+        System.out.println("PETO0");
         event.setCompanyid(companyDAO.companyidFromUserid(securityContext.getUserPrincipal().getName()));
+        System.out.println("PETO1");
         try {
             ev = eventDAO.createEvent(event);
+            System.out.println("PETO2");
             String url=null;
             PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
             url = prb.getString("imgBaseURLevento");
@@ -285,7 +294,7 @@ public class CompanyResource {
     }
 
     private UUID writeAndConvertImage(InputStream file) {
-
+        System.out.println("EN EL WRITE");
         BufferedImage image = null;
         try {
             image = ImageIO.read(file);
