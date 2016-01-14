@@ -102,6 +102,10 @@ public class UserDAOImpl implements UserDAO {
                 user.setPhoto(res.getString("photo"));
             }
 
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            String url = prb.getString("imgBaseURL");
+            user.setPhotoURL(url + user.getPhoto());
+
             //consultar las categorias de un usuario
             List<String> categories = new ArrayList<>();
 

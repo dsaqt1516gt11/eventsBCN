@@ -37,6 +37,7 @@ public class UserResource {
             throw new BadRequestException("all parameters are mandatory");
         }
         User user =null;
+        String url=null;
         System.out.println("CATEGORIAS: "+ categories);
         UUID uuid = writeAndConvertImage(image);
         System.out.println(fileDisposition.getFileName());
@@ -45,6 +46,9 @@ public class UserResource {
         try {
             System.out.println("NOMBRE DEL FICHERO: " + uuid.toString() + ".png");
             user =userDAO.createUser(name,password,email,uuid.toString() + ".png", categories,role);
+            PropertyResourceBundle prb = (PropertyResourceBundle) ResourceBundle.getBundle("eventsBCN");
+            url = prb.getString("imgBaseURL");
+            user.setPhotoURL(url + user.getPhoto());
             System.out.println("3");
             authenticationToken = (new AuthTokenDAOImpl()).createAuthToken(user.getId());
         } catch (UserAlreadyExistsException e) {
