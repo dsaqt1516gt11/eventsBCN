@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">eventsBCN</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Login</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_events_list">Proximos Eventos</string>
+    <string name="action_register">REGISTRATE</string>
+    <string name="registered">Usuario</string>
+    <string name="company">Compañia</string>
+    <string name="title_activity_register_user">Crea tu Usuario</string>
+    <string name="nombre">Nombre</string>
+    <string name="email">Email</string>
+    <string name="photo">URL de la imagen</string>
+    <string name="password">Password</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="title_activity_choose_role_activity">Como quieres Registrarte?</string>
+    <string name="title_activity_register_company">Crea tu Compañia</string>
+    <string name="cine">Cine</string>
+    <string name="teatro">Teatro</string>
+    <string name="bar">Bar</string>
+    <string name="discoteca">Discoteca</string>
+    <string name="title_categories">Elige tus categorias</string>
+    <string name="describetuempresa">Describe tu empresa</string>
+    <string name="localizacion">Donde se encuentra?</string>
+    <string name="latitude">Latitud</string>
+    <string name="longitud">Longitud</string>
+    <string name="atras">ATRAS</string>
+    <string name="title_activity_user_list">UserListActivity</string>
+    <string name="crearEvento">CREAR EVENTO</string>
+    <string name="title_activity_create_event">CreateEventActivity</string>
+    <string name="title_activity_captura_foto">CapturaFotoActivity</string>
+    <string name="EnviarFoto">Enviar</string>
+    <string name="capture">Capturar foto</string>
+    <string name="picture">Imagen</string>
+    <string name="title_activity_events_main">EventsMainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+
+</resources>

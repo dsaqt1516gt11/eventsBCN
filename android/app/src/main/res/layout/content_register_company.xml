@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="edu.upc.eetac.dsa.eventsbcn.Activitys.RegisterCompanyActivity"
+    tools:showIn="@layout/activity_register_company">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="20dip"
+            android:orientation="vertical"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <EditText
+                android:id="@+id/Companyname"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:hint="@string/nombre"
+                android:inputType="text" />
+
+
+
+            <EditText
+                android:id="@+id/Companydescription"
+                android:layout_marginTop="15dip"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:hint="@string/describetuempresa"
+                android:inputType="textMultiLine" />
+
+            <EditText
+                android:id="@+id/Companylocation"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:hint="@string/localizacion"
+                android:inputType="text"
+                android:layout_marginTop="15dip"
+                android:layout_marginBottom="30dip" />
+
+
+
+
+            <Button
+                android:id="@+id/btnRegisterCompany"
+                android:layout_height="wrap_content"
+                android:layout_width="124dp"
+                android:text="@string/registrarse"
+                android:onClick="registro"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:text="@string/atras"
+                android:id="@+id/btn_Cancel"
+                android:onClick="cancel"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
+
+
+
+
+
