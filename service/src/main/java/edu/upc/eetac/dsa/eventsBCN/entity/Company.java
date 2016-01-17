@@ -20,10 +20,14 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Company {
     @InjectLinks({
-            @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "eventsBCN Root API"),
+            @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "EventsBCN Root API"),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
-            @InjectLink(resource = CompanyResource.class, method = "createEvent", style = InjectLink.Style.ABSOLUTE, rel = "crear evento", title = "crear evento", type= EventsBCNMediaType.EVENTSBCN_EVENT, bindings = @Binding(name = "id_company", value = "${instance.id}")),
-            @InjectLink(resource = CompanyResource.class, method = "getEventsCompany", style = InjectLink.Style.ABSOLUTE, rel = "companyevents", title = "Eventos de company", type= EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION, bindings = @Binding(name = "id_company", value = "${instance.id}")),
+            @InjectLink(resource = CompanyResource.class, method = "getCompanybyId", style = InjectLink.Style.ABSOLUTE, rel = "self", title = "Company profile", type= EventsBCNMediaType.EVENTSBCN_COMPANY, bindings = @Binding(name = "id", value = "${instance.id}")),
+            @InjectLink(resource = CompanyResource.class, method = "getCompanybyUserID", style = InjectLink.Style.ABSOLUTE, rel = "self-by-userid", title = "Company profile by userid", type= EventsBCNMediaType.EVENTSBCN_COMPANY, bindings = @Binding(name = "userid", value = "${instance.userid}")),
+            @InjectLink(resource = CompanyResource.class, method = "getEventsCompany", style = InjectLink.Style.ABSOLUTE, rel = "companyevents", title = "Company events", type= EventsBCNMediaType.EVENTSBCN_COMPANY, bindings = @Binding(name = "id_company", value = "${instance.id}")),
+            @InjectLink(resource = CompanyResource.class, method = "createEvent", style = InjectLink.Style.ABSOLUTE, rel = "crear-evento", title = "Company events", type= EventsBCNMediaType.EVENTSBCN_COMPANY, bindings = @Binding(name = "id_company", value = "${instance.id}")),
+
+
 
     })
     private List<Link> links;

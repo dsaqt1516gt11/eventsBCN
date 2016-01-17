@@ -22,6 +22,10 @@ public class CompanyDAOImpl implements CompanyDAO{
         PreparedStatement stmt = null;
         String id = null;
         try {
+            Company c = getCompanyByName(company.getName());
+            if (c != null)
+                throw new CompanyAlreadyExistsException();
+            System.out.println("No existo como empresa");
             connection = Database.getConnection();
 
             stmt = connection.prepareStatement(UserDAOQuery.UUID);
