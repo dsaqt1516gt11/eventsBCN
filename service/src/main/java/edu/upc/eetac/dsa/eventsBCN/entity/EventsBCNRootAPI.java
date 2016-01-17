@@ -19,7 +19,9 @@ public class EventsBCNRootAPI {
             @InjectLink(resource = UserResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-user", title = "Register", type= EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN),
             @InjectLink(resource = CompanyResource.class, style = InjectLink.Style.ABSOLUTE, rel = "create-company", title = "Register Company", type= EventsBCNMediaType.EVENTSBCN_COMPANY),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout", condition="${!empty resource.userid}"),
-            @InjectLink(resource = UserResource.class, method="getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", condition="${!empty resource.userid}", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${resource.userid}"))
+            @InjectLink(resource = UserResource.class, method="getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", condition="${!empty resource.userid}", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${resource.userid}")),
+            @InjectLink(resource = CompanyResource.class, method = "getCompanybyName", style = InjectLink.Style.ABSOLUTE, rel = "company-profile-name", title = "Company"),
+
 
 
 

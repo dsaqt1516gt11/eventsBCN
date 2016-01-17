@@ -21,5 +21,9 @@
   {
     "path": "events/test",
     "methods": ["GET"]
+  },
+  {
+    "path": "companies/search",
+    "methods": ["GET"]
   }
 ]

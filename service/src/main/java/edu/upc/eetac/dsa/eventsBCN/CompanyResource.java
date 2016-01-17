@@ -75,7 +75,7 @@ public class CompanyResource {
             throw new InternalServerErrorException(e.getMessage());
         }
         if (company == null)
-            throw new NotFoundException("Company with name = " + name + " doesn't exist");
+            throw new ForbiddenException("Company with name = " + name + " doesn't exist");
         return company;
     }
 
