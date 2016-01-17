@@ -30,7 +30,7 @@ import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 public class UserResource {
 
     @POST
-    @Consumes(MULTIPART_FORM_DATA)
+    @Consumes(  MULTIPART_FORM_DATA)
     @Produces(EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN)
     public Response registerUser(@FormDataParam("name") String name, @FormDataParam("password") String password, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition , @Context UriInfo uriInfo, @QueryParam("role") String role) throws URISyntaxException {
         if (name==null || password==null || email==null || categories==null || role==null || image==null) {
@@ -139,10 +139,10 @@ public class UserResource {
     private SecurityContext securityContext;
     @Path("/{id}")
     @PUT
-    @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(EventsBCNMediaType.EVENTSBCN_USER)
-    public User updateUser(@PathParam("id") String id, @FormDataParam("name") String name, @FormDataParam("password") String password, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition) {
-        if(name==null || password==null || email==null || categories==null || image==null )
+    public User updateUser(@PathParam("id") String id, @FormDataParam("name") String name, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition) {
+        if(name==null || email==null || categories==null || image==null )
             throw new BadRequestException("entity is null");
 
         String role = null;
@@ -153,16 +153,17 @@ public class UserResource {
         System.out.println("ID:" +userid);
         if(!userid.equals(id))
             throw new ForbiddenException("operation not allowed");
-        User user = null;
+        User user =new User();
         User u = null;
         UserDAO userDAO = new UserDAOImpl();
         try {
             user.setId(id);
             user.setName(name);
-            user.setPassword(password);
             user.setPhoto(uuid.toString());
             user.setEmail(email);
+            user.setCategories(categories);
             u = userDAO.updateProfile(user, role);
+            System.out.println("CATEGORIAS FUERA: " + u.getCategories());
             System.out.println("usuario actualizado!!");
             if(u == null)
                 throw new NotFoundException("User with id = "+id+" doesn't exist");

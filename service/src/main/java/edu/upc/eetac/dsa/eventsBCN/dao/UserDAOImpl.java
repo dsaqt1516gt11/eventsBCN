@@ -207,6 +207,24 @@ public class UserDAOImpl implements UserDAO {
         try {
             connection = Database.getConnection();
 
+            if(role.equals("registered")) {
+                stmt = connection.prepareStatement(UserDAOQuery.DELETE_CATEGORIES);
+                stmt.setString(1, user.getId());
+                stmt.executeUpdate();
+                System.out.println("Categorias eliminadas");
+                System.out.println("CATEGORIAS: " + user.getCategories());
+                for (String nombre : user.getCategories()) {
+                    if (nombre != null && nombre != "") {
+                        stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
+                        System.out.println("CATEGORIA: "+ nombre);
+                        stmt.setString(1, user.getId());
+                        stmt.setString(2, nombre);
+                        stmt.executeUpdate();
+                    }
+                }
+                System.out.println("relaciones usuario categorias creadas");
+            }
+
             stmt = connection.prepareStatement(UserDAOQuery.UPDATE_USER);
             stmt.setString(4, user.getId());
             stmt.setString(1, user.getName());
@@ -216,25 +234,6 @@ public class UserDAOImpl implements UserDAO {
             int rows = stmt.executeUpdate();
             if (rows == 1)
                 u = getUserById(user.getId());
-
-            if(role.equals("registered")) {
-                stmt = connection.prepareStatement(UserDAOQuery.DELETE_CATEGORIES);
-                stmt.setString(1, user.getId());
-                stmt.executeUpdate();
-                System.out.println("Categorias eliminadas");
-
-                for (String nombre : user.getCategories()) {
-                    if (nombre != null && nombre != "") {
-                        stmt = connection.prepareStatement(UserDAOQuery.ASSIGN_CATEGORIE);
-                        stmt.setString(1, user.getId());
-                        stmt.setString(2, nombre);
-                        stmt.executeUpdate();
-                    }
-                }
-                System.out.println("relaciones usuario categorias creadas");
-
-            }
-
 
         } catch (SQLException e) {
             throw e;
