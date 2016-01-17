@@ -12,19 +12,58 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>Theme Blog - Web Template Design</title>
+        <title>EventsBCN</title>
         
         <!-- stylesheets -->
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-        <link rel="stylesheet" href="assets/css/animate.css">
-        <link rel="stylesheet" href="assets/css/style.css">
+        <!--necessary stylesheets -->
+		
+		<script
+            src="http://maps.googleapis.com/maps/api/js">
+		</script>
 
+		<script>
+		var myCenter=new google.maps.LatLng(51.508742,-0.120850);
+		var marker;
+
+		function initialize()
+		{
+		var mapProp = {
+		  center:myCenter,
+		  zoom:5,
+		  mapTypeId:google.maps.MapTypeId.ROADMAP
+		  };
+
+		var map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+		var marker=new google.maps.Marker({
+		  position:myCenter,
+		  animation:google.maps.Animation.BOUNCE
+		  });
+
+		marker.setMap(map);
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
+		</script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.min.css">
+        <link type="text/css" rel="stylesheet" href="assets/css/font-awesome.min.css">
+        <link type="text/css" rel="stylesheet" href="assets/css/animate.css">
+        <link type="text/css" rel="stylesheet" href="assets/css/style.css">
+        <link type="text/css" rel="stylesheet" href="assets/css/style.css">		
+		
+
+        <!-- Estilo mapa -->
+
+	
+		
     </head>
 
     <body>
 
         <nav class="navbar navbar-default navbar-fixed-top">
+		
             <div class="container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -33,26 +72,33 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html">
-                        <img src="assets/img/logo.png" alt="Site Logo">
-                    </a>
+					<a class="navbar-brand" href="index.html">
+                        <img src="assets/img/logo.jpg" alt="Site Logo">
+                    </a>					
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-					
-                        <li class="active"><a href="index.html">Inicio</span></a></li>
-                        <li><a href="html5-templates.html">FAQ</a></li>
-                        <li><a href="wordpress-themes.html">ABOUT</a></li>
-                        <li><a href="design-inspiration.html">Perfil+foto</a></li> 
+                    
+					<ul class="nav navbar-nav navbar-right">
+										
+                        <li class="active"><a href="Eventos.html">Inicio</span></a></li>
+                        <li><a href="FAQ.html">FAQ</a></li>
+                        <li><a href="About.html">ABOUT</a></li>						
+						<li><a id="Ajustes" data-toggle="modal" data-target="#myModal20">AJUSTES</a></li>
+                        <li><a id="nombre"></a></li> 										
 						
-						<!-- <li><a href="design-inspiration.html"><font color="#FFFFFF"><span id="result"></span></font></a></li> -->   
+						<p class="navbar-text pull-right">						 
+						<button type="button" class="btn btn-success" id="CreateEvent" align="right" data-toggle="modal" data-target="#myModal22">CREAR EVENTO</button>
+						<button type="button" class="btn btn-danger" id="button_logout" align="right">LOG OUT</button>		
+						</p>
                     </ul>
 					
                 </div><!-- end of /.navbar-collapse -->
-            </div><!-- end of /.container -->
+            </div>
         </nav>
 
         <main>
@@ -64,6 +110,7 @@
 
                         
 					<span id="result"></span>
+					<span id="result15"></span>
                                    
 
                         <div class="page-turn">
@@ -100,45 +147,171 @@
 
 			<!-- Modal -->
 			<div id="myModal5" class="modal fade" role="dialog">
-				<center><div style="width: 100%" class="modal-dialog modal-lg" id="modalevent">				
-				<article class="blog-item">
-				<div class="row" id="columna">
-				<div class="col-md-8">
-				<img style="width: 70%" class="foto" src="assets/img/corporate.jpg" class="img-thumbnail center-block" alt="Blog Post Thumbnail"></a>
-				<h1><span id="result1"></span></h1></div>
-				<div class="col-md-4">				
-				<center>AQUI VA EL MAPA + LA EMPRESA + boton de asistir + foto de asistentes o numero</center>
-				
-			<!-- 	Botón Asistir o no asistir! -->
-			  <button type="button" class="btn btn-success" id="Assist">ASISTIRÉ!</button>
-				</div>
-				</div>
-				</article>
-				</div> 
+				<center>
+                    <div style="width: 100%" class="modal-dialog modal-lg" id="modalevent">
+                        <article class="blog-item">						
+                            <div class="row" id="columna">
+                                <div class="col-md-8">
+                                    
+									<span id="result4"></span>
+                                    <h1><span id="result1"></span></h1>
+                                </div>
+                                <div class="col-md-4">
+                                    <!-- MAPA -->
+									
+                                    <div id="googleMap" style="width:500px;height:380px;">
+                                    </div>
+									<br>
+                                    <br>
+                                    <center><h1 id="result10"></h1></center>
+                                    <br>
+                                    <br>
+                                    <center><h1><span id="result2"></span></h1>
+                                    </center>
+                                    <br>
+                                    <br>
+                                    <!-- 	Botón Asistir o no asistir! -->
+                                    <button type="button" class="btn btn-success" id="Assist"></button>
+									 <!-- 	Botón Eliminar Evento! -->
+									<button type="button" class="btn btn-danger" id="DeleteEvent" align="right">ELIMINAR EVENTO</button>
+									
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </center>
             </div>
-
-			  
+			
+				<!-- Modal UPDATE USUARIO (MODAL20) -->
+			<div class="container">				
+				<div id="myModal20" class="modal fade modal-wide" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<!-- Modal content-->
+						<div class="modal-content">
+						  <div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Actualize sus datos:</h4>
+							
+						  </div>
+						  <div class="modal-body"><br>
+							<span id="result500"></span>
+							<br>
+							<span id="result501"></span>
+							<br>
+							<input name="image2" type="file" id="inputFile3" required="required"></div>							
+							<br>							
+							<div class="input-group input-group-sm"><span class="input-group-addon">Email: </span><input type="text" placeholder="" id="email2" class="form-control"></div>
+							<br>
+							<div>  							
+							<label>Categorias:</label> <br>
+							  <center>
+								
+									<label class="checkbox-inline">
+									  <input type="checkbox" id="cat10" value="teatro"> Teatro
+									</label>
+									<label class="checkbox-inline">
+									  <input type="checkbox" id="cat20" value="cine"> Cine
+									</label>
+									<label class="checkbox-inline">
+									  <input type="checkbox" id="cat30" value="Discoteca"> Discoteca
+									</label>
+									<label class="checkbox-inline">
+									  <input type="checkbox" id="cat40" value="bar"> Bar
+									</label>
+							  </center>
+							</div>
+							<br>				
+							<center>
+							<button type="button" class="btn btn-success" id="button_updateusu">Aceptar
+								<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->											
+							</button>	
+							<br>
+							</center>
+						</div>				  
+					</div>
+				</div>
 			</div>
 			
-        </main>
+
+			<!-- Modal CREAR EVENTO(MODAL22) -->
+			<div class="container">				
+				<div id="myModal22" class="modal fade modal-wide" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<!-- Modal content-->
+						<div class="modal-content">
+						  <div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Cree su evento:</h4>
+							
+						  </div>
+						  <div class="modal-body"><br>
+							<div class="input-group input-group-sm"><span class="input-group-addon">Titulo: </span><input type="text" id="title" class="form-control"></div>
+							<br>
+							<div class="input-group input-group-sm"><span class="input-group-addon">Descripcion: </span><input type="text" id="description" class="form-control"></div>
+							<br>
+							<div class="input-group input-group-sm"><span class="input-group-addon">Fecha: </span><input type="text" id="date" class="form-control"></div>
+							<br>
+						    <input name="image" type="file" id="inputFile" required="required">
+							<br>
+							
+							<label>Categorias:</label> <br>
+
+								<div class="radio">
+									<label>
+									<input type="radio" name="categoria" id="bar" value="bar">
+									Bar
+									</label>						 
+								</div>
+								<div class="radio">
+									<label>
+									<input type="radio" name="categoria" id="discoteca" value="discoteca">
+									Discoteca
+									</label>
+									<label>
+										<input type="radio" name="categoria" id="restaurante" value="restaurante">
+										Restaurante
+									</label>
+								</div>
+								  <div class="radio">
+									  <label>
+										  <input type="radio" name="categoria" id="cine" value="cine">
+										  Cine
+									  </label>
+								</div>																
+
+							</div>
+							<br>					
+							<center>
+							<button type="button" class="btn btn-success" id="button_CreateEvent">Aceptar
+								<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->											
+							</button>	
+							<br>
+							</center>
+						</div>				  
+					</div>
+				</div>
+			</div>
+			
+    </main>
 
         <footer>
             <div class="container">
                 <div class="row">
+                </div>
+            </div>
         </footer>           
        
                   
 
         <!--  Necessary scripts  -->
-
+        
         <script type="text/javascript" src="assets/js/jquery-2.1.3.min.js"></script>
         <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="assets/js/wow.min.js"></script>        
         <script type="text/javascript" src="assets/js/jQuery.scrollSpeed.js"></script>
-		<script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
-		<script type="text/javascript" src="assets/js/prueba.js"></script>
-		<script type="text/javascript" src="assets/js/registros.js"></script>
-		
-
+        <script type="text/javascript" src="assets/js/prueba.js"></script>
+        <script type="text/javascript" src="assets/js/registros.js"></script>
 
         <!-- smooth-scroll -->
 
@@ -155,6 +328,20 @@
 				x.style.color = "red";
 			}
 		</script>	
+		
+		<script>$(document).ready(function(){
+			$('#nombre').text(' Bienvenido, ' + $.cookie('name'));
+			});
+		</script>
+		
+		<script>$("#Ajustes").click(function() {
+						
+			
+			document.getElementById("email2").placeholder = $.cookie('email');
+			
+							
+			});
+	</script>
 		
 		
 

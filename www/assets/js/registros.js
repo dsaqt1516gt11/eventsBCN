@@ -1,16 +1,17 @@
 /* var API_BASE_URL = "http://147.83.7.207:8080/eventsBCN"; */
 var API_BASE_URL = "http://localhost:8080/eventsBCN";
 /*--------------------------------------------------------------------------------------------------------------*/
+var token = $.cookie('token');
 
+/*--------------------------------------------------------------------------------------------------------------*/
 
 $(document).ready(function(){
-$("#button_createusu").on("click", function(e) {
-	e.preventDefault();	
-	console.log("estoy dentro funcion	"); 
-	createUser();
-});
+	
 	
 });
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
 $("#tipo").click(function(){
 	var role_registered = document.getElementById("registered");
 	var role_company = document.getElementById("company");
@@ -18,7 +19,7 @@ $("#tipo").click(function(){
 	if($("#registered").is(':checked')){
 		console.log("estoy dentro");
 		$('#myModal2').modal("show");
-		
+				
 	}	
 	if($("#company").is(':checked')){
 		console.log("estoy fuerisima");
@@ -32,39 +33,33 @@ $("#siguiente").click(function(){
 $("#AceptarEmpresa").click(function(){				
 		createCompany();	 
 });
+$("#button_createusu").on("click", function(e) {
+	e.preventDefault();	
+	console.log("estoy dentro funcion"); 
+	createUser();
+});
 
+
+/*--------------------------------------------------------------------------------------------------------------*/
 
 function createCompany(){
-	
-	var role_registered = document.getElementById("registered");
-	var role_company = document.getElementById("company");
 
-	if($("#registered").is(':checked')){
-		var role = 'registered';
-		console.log("estoy dentro");
-		
-		
-	}	
-	if($("#company").is(':checked')){
-		var role = 'companies';
-		console.log("estoy fuerisima");
-				
-	} 
-	
 	objeto = {
-        "companyname" : $('#companyname').val(),
+        "name" : $('#companyname').val(),
         "description" : $('#description').val(),
-        "localizacion" : $('#localizacion').val(),
-        "latitud" : $('#latitud').val(),
-		"longitud" : $('#longitud').val(),	
+        "location" : $('#calle').val(),
+        "latitude" : parseFloat(document.getElementById("coords1").value),
+		"longitude" : parseFloat(document.getElementById("coords1").value),
     }
-	
-		
-	
+
+
+
 	var data = JSON.stringify(objeto);
 	console.log(data);
 
 	$("#result").text('');
+
+	console.log($.cookie('token'));
 
 	$.ajax({
 		url : API_BASE_URL + '/companies',
@@ -74,46 +69,46 @@ function createCompany(){
 		contentType:'application/vnd.dsa.eventsBCN.company+json',
 		data : data,
 		headers: {
-        'X-Auth-Token':token,        
-		}, 
+        'X-Auth-Token':$.cookie('token'),
+		},
 	}).done(function(data, status, jqxhr) {
 		console.log(data);
-		Cookies.set('Token', data.token);
-		Cookies.set('id', data.id);
 		
 		window.location.replace('Eventos.html');
-		
-		$('<div class="alert alert-success"> <strong>Ok!</strong> File Created</div>').appendTo($("#result"));
-		$('<strong> Fecha: </strong> ' + data.name).appendTo($('#nombre')); 
-		
+
+		$('<div class="alert alert-success"> <strong>Ok!</strong> Company Created</div>').appendTo($("#result"));
+
 	}).fail(function() {
 		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
 	});
 
-	
+
 }
 
+/*--------------------------------------------------------------------------------------------------------------*/
+
 function createUser() {
-	
-	var musica = document.getElementById("cat1");
-	var teatro = document.getElementById("cat2");
-	var cine = document.getElementById("cat3");
-	var discoteca = document.getElementById("cat4");
-	var bar = document.getElementById("cat5");
-	if(musica.checked==false){
-		musica.value=null;
-	}	
-	if(teatro.checked==false){
-		teatro.value=null;
+
+	$("#nombre").text('');
+
+	var restaurante = document.getElementById("cat1");
+	var cine = document.getElementById("cat2");
+	var discoteca = document.getElementById("cat3");
+	var bar = document.getElementById("cat4");
+    var formData = new FormData();
+
+	if(restaurante.checked==true){
+		formData.append("categories", restaurante.value);
+				console.log("LERDOOOOO");
 	}
-	if(cine.checked==false){
-		cine.value=null;
+	if(cine.checked==true){
+	    formData.append("categories", cine.value);
 	}
-	if(discoteca.checked==false){
-		discoteca.value=null;
+	if(discoteca.checked==true){
+		formData.append("categories", discoteca.value);
 	}
-	if(bar.checked==false){
-		bar.value=null;
+	if(bar.checked==true){
+        formData.append("categories", bar.value);
 	}
 
 	var role_registered = document.getElementById("registered");
@@ -122,58 +117,55 @@ function createUser() {
 	if($("#registered").is(':checked')){
 		var role = 'registered';
 		console.log("estoy dentro");
-		
-		
-	}	
+	}
 	if($("#company").is(':checked')){
-		var role = 'companies';
+		var role = 'company';
 		console.log("estoy fuerisima");
-				
-	} 
 
-					
-		
-		objeto = {
-        "name" : $('#name').val(),
-        "password" : $('#password').val(),
-        "email" : $('#email').val(),
-        "photo" : $('#photo').val(),
-        "categories" : [
-            musica.value,
-			teatro.value,
-			cine.value,  
-			discoteca.value,
-			bar.value,
-						
-        ],  	
-		
-    }
-	
-		
-	
-	var data = JSON.stringify(objeto);
-	console.log(data);
+	}
+
+	formData.append("name",$('#name').val());
+    formData.append("password",$('#password').val());
+    formData.append("email",$('#email').val());
+    formData.append("image",$("#inputFile")[0].files[0]);
+
+
+	console.log(formData);
 
 	$("#result").text('');
 
 	$.ajax({
-		url : API_BASE_URL + '/users?role=' + role,
+		url : API_BASE_URL + '/users?role=registered',
 		type : 'POST',
 		crossDomain : true,
-		dataType : 'json',
-		contentType:'application/vnd.dsa.eventsBCN.user+json',
-		data : data,
+		processData: false,
+      //dataType : 'json',
+	    //contentType: 'multipart/form-data',
+	    contentType: false,
+		data : formData,
 	}).done(function(data, status, jqxhr) {
 		console.log(data);
-		Cookies.set('Token', data.token);
-		console.log(data.token);
-		Cookies.set('id', data.id);
+		$.cookie('token', data.token);
+		$.cookie('userid', data.userid);
+		$.cookie('role', data.role);
+		
+		$.removeCookie('name');
+		$.removeCookie('password');
+		$.removeCookie('email');
+		
+		
+		
+		$('#nombre').text('Bienvenido, ' + $.cookie('name'));
+		$.cookie('password', $('#password').val());
+		$.cookie('email', $('#email').val());
+		$.cookie('name', $('#name').val());
+		
 		
 		window.location.replace('Eventos.html');
+
 		
-		$('<div class="alert alert-success"> <strong>Ok!</strong> File Created</div>').appendTo($("#result"));
-		$('<strong> Fecha: </strong> ' + data.name).appendTo($('#nombre')); 
-		
+		$('<strong> Bienvenido, </strong>' + data.name).appendTo($('#result5'));
+
 	}).fail(function() {
 		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
 	});
@@ -182,55 +174,78 @@ function createUser() {
 
 /*--------------------------------------------------------------------------------------------------------------*/
 function createUser2() {
-	
-		objeto = {
-        "name" : $('#name1').val(),
-        "password" : $('#password1').val(),
-        "email" : $('#email1').val(),
-        "photo" : $('#photo1').val(),
-        	
-		
-    }	
-		
-    
-	var data = JSON.stringify(objeto);
-	console.log(data);
 
-	$("#result").text('');
+       $("#nombre").text('');
 
-	$.ajax({
-		url : API_BASE_URL + '/users?role=registered',
-		type : 'POST',
-		crossDomain : true,
-		dataType : 'json',
-		contentType:'application/vnd.dsa.eventsBCN.user+json',
-		data : data,
-	}).done(function(data, status, jqxhr) {
-		console.log(data);
-		Cookies.set('Token', data.token);
-		console.log(data.token);
-		Cookies.set('id', data.id);
-		$('<div class="alert alert-success"> <strong>Ok!</strong> File Created</div>').appendTo($("#result"));
-		$('<strong> Fecha: </strong> ' + data.name).appendTo($('#nombre')); 
+       var formData = new FormData();
+       formData.append("name",$('#name1').val());
+       formData.append("password",$('#password1').val());
+       formData.append("email",$('#email1').val());
+       formData.append("image",$("#inputFile2")[0].files[0]);
+       formData.append("categories","bar");
+
+
+       	$("#result").text('');
+
+       	$.ajax({
+       		url : API_BASE_URL + '/users?role=company',
+            type : 'POST',
+            crossDomain : true,
+            processData: false,
+          //dataType : 'json',
+            //contentType: 'multipart/form-data',
+            contentType: false,
+            data : formData,
+       	}).done(function(data, status, jqxhr) {
+       		console.log(data);
+
+			$.cookie('role', data.role);
+       		$.cookie('token', data.token);       		
+       		$.cookie('userid', data.userid);
+       		var id = $.cookie('id');
+       		       		
+       		$.removeCookie('name');
+			$.removeCookie('password');
+			$.removeCookie('email');
 		
-	}).fail(function() {
-		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
-	});
+       		$.cookie('name', $('#name1').val());
+       		$.cookie('password', $('#password1').val());
+       		$.cookie('email', $('#email1').val());
+       		
+       		$('#nombre').text('Bienvenido, ' + $.cookie('name'));
+			
+		       		
+       	}).fail(function() {
+       		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
+       	});
 
-}
+       }
+
+       var id = $.cookie('id');
+
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
 $( "#button_login" ).click(function(e) {
 	event.preventDefault();
-	login($("#login").val(), $("#password").val(), function(){
+	login($("#login").val(), $("#passwordLogin").val(), function(){
   	console.log("change");
-  	window.location.replace('Eventos.html');
-	
+  	window.location.replace('Eventos.html');	
   }); 	
   });
+  
+/*--------------------------------------------------------------------------------------------------------------*/
 
+$( "#button_logout" ).click(function(e) {
+	event.preventDefault();
+	logout();
+  	console.log("change");
+  	window.location.replace('index.html');	
+   	
+  });
 
+/*--------------------------------------------------------------------------------------------------------------*/
+  
 function linksToMap(links){
 	var map = {};
 	$.each(links, function(i, link){
@@ -241,6 +256,8 @@ function linksToMap(links){
 
 	return map;
 }
+
+/*--------------------------------------------------------------------------------------------------------------*/
 
 function loadAPI(complete){
 	$.get(API_BASE_URL)
@@ -253,26 +270,36 @@ function loadAPI(complete){
 		});
 }
 
+/*--------------------------------------------------------------------------------------------------------------*/
+
 function login(login, password, complete){
+	
 	loadAPI(function(){
 		var api = JSON.parse(sessionStorage.api);
 		var uri = api.login.uri;
+		$("#nombre").text('');
 		$.post(uri,
 			{
 				login: login,
 				password: password
 			}).done(function(authToken){
+				console.log("estoy dentro del login");
 				authToken.links = linksToMap(authToken.links);
 				sessionStorage["auth-token"] = JSON.stringify(authToken);
-				complete();
-				$('Bienvenido, ' + login).appendTo($('#nombre'));
-				$.cookie('token', authToken.token);
-				/* Cookies.set('Token', authToken.token); */
-				var token2 = $.cookie('token');				
-				console.log(token2);
-				console.log(login);
-				console.log("segundo token" + authToken.token);
-				window.location.replace('Eventos.html');
+				complete();		
+				
+				$.cookie('token', authToken.token);				
+				$.cookie('role', authToken.role);
+				$.cookie('userid', authToken.userid);
+				
+				$.removeCookie('name');
+				$.cookie('name', login);
+				
+				$('#nombre').text('Bienvenido, ' + $.cookie('name'));
+														
+				window.location.replace('Eventos.html');	
+
+				
 			}).fail(function(jqXHR, textStatus, errorThrown){
 				var error = jqXHR.responseJSON;
 				alert(error.reason);
@@ -281,26 +308,29 @@ function login(login, password, complete){
 	});
 }
 
-function logout(complete){
-	var authToken = JSON.parse(sessionStorage["auth-token"]);
-	var uri = authToken["links"]["logout"].uri;
-	console.log(authToken.token);
+
+/*--------------------------------------------------------------------------------------------------------------*/
+
+function logout(){
+	
+	var url = API_BASE_URL + '/login';
+	console.log(token);
 	$.ajax({
     	type: 'DELETE',
-   		url: uri,
+   		url: url,
     	headers: {
-        	"X-Auth-Token":authToken.token
+        	"X-Auth-Token":token,
     	}
     }).done(function(data) { 
-    	sessionStorage.removeItem("api");
-    	sessionStorage.removeItem("auth-token");
-    	complete();
+    	console.log("logout hecho");
+		
   	}).fail(function(){});
 }
 
 
 
-				 
+
+				
 				
 				
 				

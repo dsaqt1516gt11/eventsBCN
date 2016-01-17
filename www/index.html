@@ -9,11 +9,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name=viewport content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
+
+	
     <!-- title and favicon -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
     <title>BCNEvents</title>
     
@@ -31,20 +35,15 @@
     
 
     <!--necessary stylesheets -->
-
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link type="text/css" rel="stylesheet" href="assets/css/ionicons.min.css">
-    <link type="text/css" rel="stylesheet" href="assets/css/popup.css">
-    <link type="text/css" rel="stylesheet" href="assets/css/owl.carousel.css">
-    <link type="text/css" rel="stylesheet" href="assets/css/owl.theme.css">
-    <link type="text/css" rel="stylesheet" href="assets/css/style.css">    
-	<!-- <link type="text/css" rel="stylesheet" href="assets/css/boot.min.css">
-	<link type="text/css" rel="stylesheet" href="assets/css/font.min.css">
-	<link type="text/css" rel="stylesheet" href="assets/css/style2.css">
-     -->
-	    
+	<link type="text/css" rel="stylesheet" href="assets/css/animate.css">
+	<link type="text/css" rel="stylesheet" href="assets/css/style.css">
+   
+
 </head>
+
 
 
 <body>
@@ -57,78 +56,57 @@
 		  width: 100%;
 		  margin: auto;
 	  }
-	 </style>
-	
-	<div class="container">
-	  <br>
-	  <div id="myCarousel" class="carousel slide" data-ride="carousel">
-	  
-		<!-- Indicators -->
-		<ol class="carousel-indicators">
-		  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-		  <li data-target="#myCarousel" data-slide-to="1"></li>
-		  <li data-target="#myCarousel" data-slide-to="2"></li>
-		  <li data-target="#myCarousel" data-slide-to="3"></li>
-		</ol>
+	 </style> 
+	<br><br>
+	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+		  <!-- Indicators -->
+		  <ol class="carousel-indicators">
+			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+			<li data-target="#myCarousel" data-slide-to="1"></li>
+			<li data-target="#myCarousel" data-slide-to="2"></li>			
+		  </ol>
 
-		<!-- Wrapper for slides -->
-		<div class="carousel-inner" role="listbox">
-
-		  <div class="item active">
-			<img src="1.jpg" alt="Chania" width="1026" height="800">
-			<div class="carousel-caption">
-			  <h3>Chania</h3>
-			  <p>The atmosphere in Chania has a touch of Florence and Venice.</p>
+		  <!-- Wrapper for slides -->
+		  <div class="carousel-inner" role="listbox">
+			<div class="item active">
+			  <img src="1.jpg" width="414" height="122">
+			  <div class="carousel-caption">				
+				<h1>La mejor guia de eventos de Barcelona.</h1>
+			  </div>
 			</div>
+
+			<div class="item">
+			  <img src="2.jpg" width="414" height="122">
+			  <div class="carousel-caption">				
+				<h1>Los mejores locales y eventos.</h1>
+			  </div>
+			</div>
+
+			<div class="item">
+			  <img src="3.jpg" width="414" height="122">
+			  <div class="carousel-caption">
+				<h3>No te pierdas ninguna fiesta!</h3>				
+			  </div>
+			</div>			
 		  </div>
 
-		  <div class="item">
-			<img src="2.jpg" alt="Chania" width="1026" height="800">
-			<div class="carousel-caption">
-			  <h3>Chania</h3>
-			  <p>The atmosphere in Chania has a touch of Florence and Venice.</p>
-			</div>
-		  </div>
-		
-		  <div class="item">
-			<img src="3.jpg" alt="Flower" width="1026" height="800">
-			<div class="carousel-caption">
-			  <h3>Flowers</h3>
-			  <p>Beatiful flowers in Kolymbari, Crete.</p>
-			</div>
-		  </div>
-
-		  <div class="item">
-			<img src="4.jpg" alt="Flower" width="1026" height="800">
-			<div class="carousel-caption">
-			  <h3>Flowers</h3>
-			  <p>Beatiful flowers in Kolymbari, Crete.</p>
-			</div>
-		  </div>
-	  
+		  <!-- Left and right controls -->
+		  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+			<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		  </a>
+		  <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		  </a>
 		</div>
-
-		<!-- Left and right controls -->
-		<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-		  <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-		  <span class="sr-only">Previous</span>
-		</a>
-		<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-		  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-		  <span class="sr-only">Next</span>
-		</a>
-	  </div>
-	  
-	 </div>
 	<!--FIN Carrousel!!!-->  
-	
-	
-	  
+
 	<!-- BOTONES Y MODALS DE ACCESO!!!-->  
 	
 	<!-- Modal LOGIN (MODAL) -->
 	<div class="container">
-		<br><br><br><br>
+		<br><br><br>
 		<button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#myModal">ACCEDER</button>		
 		<div id="myModal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
@@ -140,205 +118,256 @@
 					<h4 class="modal-title">Introduzca su Nombre y su Contraseña:</h4>					
 				  </div>
 				  
-				  <div class="modal-body"><br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Nombre: </span><input type="text" id="login" class="form-control"></div>
-					<br>
-                    <div class="input-group input-group-sm"><span class="input-group-addon">Contraseña:</span> <input type="text" id="password" class="form-control"><br/></div>
-					<br><br><br>
-					<center>
-					<button type="button" class="btn btn-success" id="button_login">Aceptar
-						<i class="ion-ios-briefcase-outline hidden-xs"></i>												
-					</button>
-					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal1">Registrarme</button>					
-				  </div>				  
-				</div>
+				  <div class="modal-body">
+                    <br>
+					<div class="input-group input-group-sm"><span class="input-group-addon">Nombre: </span><input type="text" id="login" class="form-control">
+                    </div>
+                    <br>
+                    <div class="input-group input-group-sm"><span class="input-group-addon">Contraseña:</span> <input type="password" id="passwordLogin" class="form-control">
+                    <br>
+                    </div>
+                    <br><br><br>
+                    <center>
+                        <button type="button" class="btn btn-success" id="button_login">Aceptar
+                            <i class="ion-ios-briefcase-outline hidden-xs"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal1">Registrarme</button>
+                    </center>
+                  </div>
+                </div>
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- Modal TIPO USUARIO (MODAL1) -->
 	<div class="container">
-		<button type="button" class="btn btn-default btn-lg btn-block" data-toggle="modal" data-target="#myModal1">¿NO ESTÁS REGISTRADO? REGISTRATE!</button>		
+		<button type="button" class="btn btn-default btn-lg btn-block"  style="background:green" data-toggle="modal" data-target="#myModal1">¿NO ESTÁS REGISTRADO? REGISTRATE!</button>
 		<div id="myModal1" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 
 				<!-- Modal content-->
 				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<center><h4 class="modal-title">Tipo de Usuario:</h4>
-					
-				  </div>
-				  <div class="modal-body"><br><center>
-					<div class="radio">
-						<label>
-						<input type="radio" name="tipousu" id="registered" value="registered">
-						Particular
-						</label>						 
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<center><h4 class="modal-title">Tipo de Usuario:</h4>
+						</center>
 					</div>
-					<div class="radio">
-						<label>
-						<input type="radio" name="tipousu" id="company" value="company">
-						Empresa
-						</label>
-					</div>	
-										
-					<br><br><br>
-					<center>
-					<button type="button" class="btn btn-success" id="tipo">Aceptar</button> 
-				  </div>
+					<div class="modal-body"><br>
+						<center>
+							<div class="radio">
+								<label>
+									<input type="radio" name="tipousu" id="registered" value="registered">
+									Particular
+								</label>
+							</div>
+							<div class="radio">
+								<label>
+									<input type="radio" name="tipousu" id="company" value="company">
+									Empresa
+								</label>
+							</div>
+							<br><br><br>
+							<button type="button" class="btn btn-success" id="tipo">Aceptar</button>
+						</center>
+
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
+
 	<!-- Modal REGISTRO USUARIO (MODAL2) -->
-	<div class="container">				
+	<div class="container">
 		<div id="myModal2" class="modal fade modal-wide" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<!-- Modal content-->
 				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Rellene los campos especificados:</h4>
-					
-				  </div>
-				  <div class="modal-body"><br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Nombre: </span><input type="text" id="name" class="form-control"></div>
-					<br>
-                    <div class="input-group input-group-sm"><span class="input-group-addon">Contraseña:</span> <input type="text" id="password" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Email: </span><input type="text" id="email" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Imagen: </span><input type="text" id="photo" class="form-control"></div>
-					<br>
-					<label>Categorias:</label> <br><center>					
-						<label class="checkbox-inline" id="cat_registro">
-							  <input type="checkbox" id="cat1" value="musica"> Musica
-							</label>
-							<label class="checkbox-inline">
-							  <input type="checkbox" id="cat2" value="teatro"> Teatro
-							</label>
-							<label class="checkbox-inline">
-							  <input type="checkbox" id="cat3" value="cine"> Cine
-							</label>
-							<label class="checkbox-inline">
-							  <input type="checkbox" id="cat4" value="Discoteca"> Discoteca
-							</label>
-							<label class="checkbox-inline">
-							  <input type="checkbox" id="cat5" value="bar"> Bar
-							</label>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Rellene los campos especificados:</h4>
+
 					</div>
-					<br>					
+					<div class="modal-body"><br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Nombre: </span><input type="text" id="name" class="form-control"></div>
+						<br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Contraseña:</span> <input type="password" id="password" class="form-control"></div>
+						<br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Email: </span><input type="text" id="email" class="form-control"></div>
+						<br>
+						<input name="image" type="file" id="inputFile" required="required">
+						<br>
+						<label>Categorias:</label> <br>
+						<center>
+							<label class="checkbox-inline" id="cat_registro">
+								<label class="checkbox-inline">
+									<input type="checkbox" id="cat1" value="restaurante"> Restaurante
+								</label>
+								<label class="checkbox-inline">
+									<input type="checkbox" id="cat2" value="cine"> Cine
+								</label>
+								<label class="checkbox-inline">
+									<input type="checkbox" id="cat3" value="discoteca"> Discoteca
+								</label>
+								<label class="checkbox-inline">
+									<input type="checkbox" id="cat4" value="bar"> Bar
+								</label>
+							</label>
+						</center>
+					</div>
+					<br>
 					<center>
-					<button type="button" class="btn btn-success" id="button_createusu">Aceptar
-						<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->											
-					</button>	
-					<br>					
-				</div>				  
+						<button type="button" class="btn btn-success" id="button_createusu">Aceptar
+							<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->
+						</button>
+						<br>
+					</center>
+				</div>
 			</div>
 		</div>
 	</div>
-	
-	
-	
+
+
+
 	<!-- Modal REGISTRO EMPRESA (MODAL3) -->
-	<div class="container">		
+	<div class="container">
 		<!-- Modal -->
 		<div id="myModal3" class="modal fade modal-wide" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 
 				<!-- Modal content-->
 				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Rellene los campos especificados:</h4>
-					
-				  </div>
-				  <div class="modal-body"><br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Nombre: </span><input type="text" id="name1" class="form-control"></div>
-					<br>
-                    <div class="input-group input-group-sm"><span class="input-group-addon">Contraseña:</span> <input type="text" id="password1" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Email: </span><input type="text" id="email1" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Imagen: </span><input type="text" id="photo1" class="form-control"></div>
-					<br>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Rellene los campos especificados:</h4>
+
 					</div>
+					<div class="modal-body"><br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Nombre: </span><input type="text" id="name1" class="form-control"></div>
+						<br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Contraseña:</span> <input type="password" id="password1" class="form-control"></div>
+						<br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Email: </span><input type="text" id="email1" class="form-control"></div>
+						<br>
+						<div>  <input name="image2" type="file" id="inputFile2" required="required"></div>
 					</div>
-					<br>					
-					<center>
-					<button type="button" class="btn btn-success" id="siguiente" data-toggle="modal" data-target="#myModal10">Siguiente</button> 
-						<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->											
+				</div>
+
+				<center>
+					<button type="button" class="btn btn-success" id="siguiente" data-toggle="modal" data-target="#myModal10">Siguiente</button>
+					<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->
 					</button>
-					<br>					
-				  </div>				  
+					<br>
+				</center>
 			</div>
 		</div>
 	</div>
-	
+
+
 	<!-- Modal REGISTRO EMPRESA (MODAL10) -->
-	<div class="container">		
+	<div class="container">
 		<!-- Modal -->
 		<div id="myModal10" class="modal fade modal-wide" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 
 				<!-- Modal content-->
 				<div class="modal-content">
-				  <div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Rellene los campos especificados:</h4>
-					
-				  </div>
-				  <div class="modal-body"><br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Nombre Empresa: </span><input type="text" id="companyname" class="form-control"></div>
-					<br>
-                    <div class="input-group input-group-sm"><span class="input-group-addon">Descripción:</span> <input type="text" id="description" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Localización:</span> <input type="text" id="localizacion" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Latitud: </span><input type="text" id="latitud" class="form-control"></div>
-					<br>
-					<div class="input-group input-group-sm"><span class="input-group-addon">Longitud: </span><input type="text" id="longitud" class="form-control"></div>
-					<br>										
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Rellene los campos especificados:</h4>
+
 					</div>
-					<br>					
+					<div class="modal-body">
+						<div class="input-group input-group-sm"><span class="input-group-addon">Nombre Empresa: </span><input type="text" id="companyname" class="form-control"></div>
+						<br>
+						<div class="input-group input-group-sm"><span class="input-group-addon">Descripción:</span> <input type="text" id="description" class="form-control"></div>
+						<br>
+						<center>
+							<div style="padding-bottom:10px;"><input id="calle" type="text" name="address" value="O. J. Brochs g 16a, Bergen" style="width:400px;border:1px solid black"><input type="button" name="search" value="Buscar"></div>
+						</center>
+						<div>
+							<input id="coords1"><input id="coords2">
+						</div>
+						<div id="gmap" style="width:300px; height:300px;"></div>
+
+						<script>
+
+                      jQuery(document).ready(function() {
+
+                      // Load google map
+                      var map = new google.maps.Map( document.getElementById("gmap"),  {
+                      center: new google.maps.LatLng(0,0),
+                      zoom: 2,
+                      mapTypeId: google.maps.MapTypeId.ROADMAP,
+                      panControl: false,
+                      streetViewControl: false,
+                      mapTypeControl: false
+                      });
+
+
+                      jQuery('input[name=search]').click(function() {
+
+                      var geocoder = new google.maps.Geocoder();
+                      geocoder.geocode({
+                      address : jQuery('input[name=address]').val(),
+                      region: 'no'
+                      },
+                      function(results, status) {
+                      if (status.toLowerCase() == 'ok') {
+                      // Get center
+                      var coords = new google.maps.LatLng(
+                      results[0]['geometry']['location'].lat(),
+                      results[0]['geometry']['location'].lng()
+                      );
+                      jQuery('#coords1').val(coords.lat());
+                      jQuery('#coords2').val(coords.lng());
+                      map.setCenter(coords);
+                      map.setZoom(18);
+
+                      // Set marker also
+                      marker = new google.maps.Marker({
+                      position: coords,
+                      map: map,
+                      title: jQuery('input[name=address]').val(),
+                      });
+
+                      }
+                      }
+                      );
+                      });
+
+                      });
+
+                      </script>
+						<br>
+					</div>
+
 					<center>
-					<button type="button" class="btn btn-success" id="AceptarEmpresa" data-toggle="modal">Aceptar</button> 
-						<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->											
-					</button>
-					<br>					
-				  </div>				  
+						<button type="button" class="btn btn-success" id="AceptarEmpresa" data-toggle="modal">Aceptar</button>
+						<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->
+						</button>
+					</center>
+
+				</div>
+
 			</div>
 		</div>
 	</div>
-	
-																
-			
-   
-    
-    <!--  
+
+
+	<!--
     9 ) Javascript
     - -->
-    
     <script type="text/javascript" src="assets/js/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="assets/js/modernizr.js"></script>
-    <script type="text/javascript" src="assets/js/jquery.easing.min.js"></script>
-    <script type="text/javascript" src="assets/js/jquery.mixitup.min.js"></script>
-    <script type="text/javascript" src="assets/js/jquery.popup.min.js"></script>
-	<script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="assets/js/owl.carousel.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
-    <script type="text/javascript" src="assets/js/contact.js"></script>
-    <script type="text/javascript" src="assets/js/script.js"></script>
-	<script type="text/javascript" src="assets/js/registros.js"></script>
-
-	
-
+    <script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="assets/js/jQuery.scrollSpeed.js"></script>
+	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/js/wow.min.js"></script>
+    <script type="text/javascript" src="assets/js/registros.js"></script>
 	
 	
 	
 
+	
 </body>
 </html>
