@@ -23,7 +23,6 @@ public class Event {
             @InjectLink(resource = CompanyResource.class, method = "wontassistEvent", style = InjectLink.Style.ABSOLUTE, rel = "wontassist", title = " Dejar de Asistir", bindings = {@Binding(name = "id_company", value = "${instance.companyid}"), @Binding(name = "id_event", value = "${instance.id}")}),
             @InjectLink(resource = CompanyResource.class, method = "getCompanybyId", style = InjectLink.Style.ABSOLUTE, rel = "company-profile", title = "Company", bindings = @Binding(name = "id", value = "${instance.companyid}")),
             @InjectLink(resource = CompanyResource.class, method = "deleteEvent", style = InjectLink.Style.ABSOLUTE, rel = "delete", title = "delete event", bindings = {@Binding(name = "id_company", value = "${instance.companyid}"), @Binding(name = "id", value = "${instance.id}")}),
-            @InjectLink(resource = CompanyResource.class, method = "getCompanybyName", style = InjectLink.Style.ABSOLUTE, rel = "company-profile-name", title = "Company"),
 
 
 
