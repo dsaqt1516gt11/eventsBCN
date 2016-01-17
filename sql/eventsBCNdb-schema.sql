@@ -7,7 +7,7 @@ CREATE TABLE users (
     id BINARY(16) NOT NULL,
     name VARCHAR(15) NOT NULL UNIQUE,
     password BINARY(16) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
     photo VARCHAR(800) NOT NULL,
     PRIMARY KEY (id)
 );
