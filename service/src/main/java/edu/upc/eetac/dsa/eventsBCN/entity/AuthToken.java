@@ -18,7 +18,7 @@ public class AuthToken {
             @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "EventsBCN Root API"),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "self login", title = "Login", type= EventsBCNMediaType.EVENTSBCN_AUTH_TOKEN),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
-            @InjectLink(resource = UserResource.class, method = "getUser", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${instance.userid}")),
+            @InjectLink(resource = UserResource.class, method = "getUserbyId", style = InjectLink.Style.ABSOLUTE, rel = "user-profile", title = "User profile", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${instance.userid}")),
             @InjectLink(resource = EventResource.class, method = "getEventsByCategoriesUser", style = InjectLink.Style.ABSOLUTE, rel = "events", title = "Eventos de usuario", type= EventsBCNMediaType.EVENTSBCN_EVENT_COLLECTION),
 
 

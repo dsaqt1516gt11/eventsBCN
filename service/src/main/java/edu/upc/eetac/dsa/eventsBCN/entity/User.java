@@ -18,6 +18,7 @@ public class User {
             @InjectLink(resource = EventsBCNRootAPIResource.class, style = InjectLink.Style.ABSOLUTE, rel = "home", title = "EventsBCN Root API"),
             @InjectLink(resource = LoginResource.class, style = InjectLink.Style.ABSOLUTE, rel = "logout", title = "Logout"),
             @InjectLink(resource = UserResource.class, method = "getUserbyId", style = InjectLink.Style.ABSOLUTE, rel = "self", title = "User profile", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${instance.id}")),
+            @InjectLink(resource = UserResource.class, method = "getEventsAssist", style = InjectLink.Style.ABSOLUTE, rel = "event-assist", title = "User events assist", type= EventsBCNMediaType.EVENTSBCN_USER, bindings = @Binding(name = "id", value = "${instance.id}")),
             @InjectLink(resource = CompanyResource.class, method = "getCompanybyUserID", style = InjectLink.Style.ABSOLUTE, rel = "self-by-userid", title = "Company profile by userid", type= EventsBCNMediaType.EVENTSBCN_COMPANY, bindings = @Binding(name = "userid", value = "${instance.id}")),
 
     })
