@@ -102,9 +102,6 @@ public class CompanyResource {
         if(company == null)
             throw new BadRequestException("entity is null");
 
-        String userid = securityContext.getUserPrincipal().getName();
-        if(!userid.equals(company.getUserid()))
-            throw new ForbiddenException("operation not allowed");
         Company c=null;
         CompanyDAO companyDAO = new CompanyDAOImpl();
         try {
