@@ -279,6 +279,51 @@ public class EventDAOImpl implements EventDAO {
         return eventCollection;
     }
 
+    public EventCollection getEventsByAssist(String userid) throws SQLException{
+        EventCollection eventCollection = new EventCollection();
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        try {
+            System.out.println("1");
+            connection = Database.getConnection();
+            stmt = connection.prepareStatement(EventDAOQuery.GET_EVENTS_BY_ASSIST);
+            stmt.setString(1, userid);
+            System.out.println("2");
+            ResultSet rs = stmt.executeQuery();
+            boolean first = true;
+            System.out.println("3");
+            while (rs.next()) {
+                Event event = new Event();
+                event.setId(rs.getString("id"));
+                event.setTitle(rs.getString("title"));
+                event.setDescription(rs.getString("description"));
+                event.setDate(rs.getString("date"));
+                event.setPhoto(rs.getString("photo"));
+                event.setCategory(rs.getString("category"));
+                event.setCompanyid(rs.getString("companyid"));
+                event.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+                event.setLastModified(rs.getTimestamp("last_modified").getTime());
+                if (first) {
+                    eventCollection.setNewestTimestamp(event.getLastModified());
+                    first = false;
+                }
+                eventCollection.setOldestTimestamp(event.getLastModified());
+
+                eventCollection.getEvents().add(event);
+            }
+            System.out.println("4");
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+
+        return eventCollection;
+    }
+
+
     @Override
     public boolean deleteEvent(String eventid) throws SQLException {
         Connection connection = null;

@@ -18,6 +18,7 @@ public interface EventDAO {
     public EventCollection getEvents() throws SQLException;
     public EventCollection getEventsByCategories(String id) throws SQLException;
     public EventCollection getEventsByCompany(String idcompany) throws SQLException;
+    public EventCollection getEventsByAssist(String userid) throws SQLException;
     public Event updateEvent(Event event) throws SQLException;
     public boolean deleteEvent(String eventid) throws SQLException;
 
