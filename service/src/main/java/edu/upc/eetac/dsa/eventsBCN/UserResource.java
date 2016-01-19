@@ -168,10 +168,10 @@ public class UserResource {
     private SecurityContext securityContext;
     @Path("/{id}")
     @PUT
-    @Consumes(EventsBCNMediaType.EVENTSBCN_USER)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(EventsBCNMediaType.EVENTSBCN_USER)
-    public User updateUser(@PathParam("id") String id, @FormDataParam("name") String name, @FormDataParam("password") String password, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition) {
-        if(name==null || password==null || email==null || categories==null || image==null )
+    public User updateUser(@PathParam("id") String id, @FormDataParam("name") String name, @FormDataParam("email") String email, @FormDataParam("categories") List<String> categories, @FormDataParam("image") InputStream image, @FormDataParam("image") FormDataContentDisposition fileDisposition) {
+        if(name==null || email==null || categories==null || image==null )
             throw new BadRequestException("entity is null");
 
         String role = null;
@@ -180,17 +180,15 @@ public class UserResource {
         UUID uuid = writeAndConvertImage(image);
         String userid = securityContext.getUserPrincipal().getName();
         System.out.println("ID:" +userid);
-        if(!userid.equals(id))
-            throw new ForbiddenException("operation not allowed");
-        User user = null;
+        User user = new User();
         User u = null;
         UserDAO userDAO = new UserDAOImpl();
         try {
             user.setId(id);
             user.setName(name);
-            user.setPassword(password);
             user.setPhoto(uuid.toString());
             user.setEmail(email);
+            user.setCategories(categories);
             u = userDAO.updateProfile(user, role);
             System.out.println("usuario actualizado!!");
             if(u == null)
