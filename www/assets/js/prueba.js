@@ -6,6 +6,7 @@ var role = $.cookie('role');
 var companyid = $.cookie('companyid');;
 var empresa = new Object();
 var fotoUsu;
+var useridASSIST;
 
 
 
@@ -43,7 +44,8 @@ $(document).ready(function(){
 		$("main").on("click", "article", function(e) {
 			console.log(e);
 			var arr = e.target.className.split(' ');
-			eventid = arr[1];		
+			eventid = arr[1];
+            useridASSIST = arr[1];
 		$('#myModal5').modal('show');
 		console.log("IDEVENTO ANTES: " +eventid);
 		$.cookie('eventoid', eventid);
@@ -74,7 +76,7 @@ $(document).ready(function(){
 		$("main").on("click", "article", function(e) {
 			console.log(e);
 			var arr = e.target.className.split(' ');
-			var eventid = arr[1];		
+			var eventid = arr[1];
 		$('#myModal5').modal('show');
 		$.cookie('eventoid', eventid);
 		getEvento(eventid);	
@@ -120,7 +122,59 @@ $(document).ready(function(){
 		deleteEvent();
 			
 		});	
+		
+	$("#FAQ").click(function() {
+		
+		
+		window.location.replace('FAQ.html');
+		
+			
+		});	
 	
+
+
+	
+	$("#result10").on("click", function(e) {
+		
+				   
+	   $.removeCookie('userid');
+		
+	  
+		console.log(e);
+		console.log(e.target);
+		var arr1 = e.target.className.split(' ');
+		usuario = arr1[1];
+		console.log(usuario);
+		console.log(arr1);
+		
+		$.cookie('userid', usuario);
+		
+		getUsuPorId();
+		
+		window.location.replace('PerfilUsu.html');
+		
+		 
+			
+		});	
+		
+		
+	$("#result2").on("click", function(e) {
+		
+		$("#result200").text('');		   
+	   
+		console.log(e);		
+		var arr2 = e.target.className.split(' ');
+		companyid = arr2[1];
+		console.log(companyid);
+		console.log(arr2);
+		
+		console.log("c");				
+		console.log("d");	
+		window.location.replace('PerfilEmpresa.html');
+		
+		 
+			
+		});
 		
 
 
@@ -139,7 +193,7 @@ function getUsuPorId() {
 	$.ajax({
 		url : url,
 		type : 'GET',
-		crossDomain : true,
+		crossDomain : true,		
 		headers: {
         'X-Auth-Token':token,        
 		}, 		
@@ -172,6 +226,8 @@ function getUsuPorId() {
 			
 
 			fotoUsu = data.photoURL;
+
+			geteventsAssist(data.id);
 			
 	}).fail(function() {
 		
@@ -179,13 +235,63 @@ function getUsuPorId() {
 	});
 
 }
+
+
+function geteventsAssist(ide){
+	console.log("ESTAMOS DENTRO DE geteventsAssist");
+	console.log("LA ID." + ide);
+var url = API_BASE_URL + '/users/assist/' + ide;
+	$("#result129").text('');
+	console.log(token);
+
+	$.ajax({
+		url : url,
+		type : 'GET',
+		crossDomain : true,
+		dataType : 'json',
+		headers: {
+        'X-Auth-Token':token,
+		},
+	}).done(function(data, status, jqxhr) {
+		var f = data.events ;
+		$.each(f, function(i, v) {
+
+			var evento = v;
+
+			$.removeCookie('eventitoid');
+            $.cookie('eventitoid', evento.id);
+
+            $.removeCookie('date11');
+            $.cookie('date11', evento.date);
+
+            $.removeCookie('title11');
+            $.cookie('title11', evento.title);
+
+            $.removeCookie('photoURL11');
+            $.cookie('photoURL11', evento.photoURL);
+
+
+            $('<article class="blog-item '+$.cookie('eventitoid')+'"><div class="row" id="columna"><div class="col-md-8"><img style="width: 100%;id="imagen" class="foto '+$.cookie('eventitoid')+'" src="'+$.cookie('photoURL11')+'" class="img-thumbnail center-block"'
+            			+'alt="Blog Post Thumbnail"></a></div>'
+            			+'<div class="col-md-4"><h1 style="text-align:center;class="titulo" id="titulo"><strong> Titulo: </strong>' + $.cookie('title11') +'<br>'
+            			+'<strong> Fecha: </strong> ' +  $.cookie('date11') + '<br>'
+            			+'</div></div></article>').appendTo($('#result129'));
+		 });
+
+
+
+	}).fail(function() {
+		$("#result129").text("No events!!");
+	});
+
+
+}
  
 
- 
 /*--------------------------------------------------------------------------------------------------------------*/
 
 function assisttoEvent(id, eventid) {
-	
+	console.log("ID PARA EL ASSISTIR: " + eventid);
 	var url = API_BASE_URL + '/companies/1sdf89dsf8/events/' + eventid +'/assist';
 		
 	$.ajax({
@@ -212,7 +318,7 @@ function assisttoEvent(id, eventid) {
 /*--------------------------------------------------------------------------------------------------------------*/
 
 function wontassit(id, eventid) {
-	
+	console.log("ID PARA EL NOOOO ASSISTIR: " + eventid);
 	var url = API_BASE_URL + '/companies/1sdf89dsf8/events/' + eventid +'/wontassist';
 		
 	$.ajax({
@@ -305,11 +411,15 @@ function getEventos() {
 
 
 function getEvento(eventid) {
-	
+	$.removeCookie('eventillo');
+	$.cookie('eventillo', eventid);
+	$.removeCookie('eventoid');
+	$.cookie('eventoid', eventid);
 	var url = API_BASE_URL + '/events/' + eventid;
 	console.log(url);
 	$("#result1").text('');
-	
+	$("#result10").text('');
+
 	
 	$.ajax({
 		url : url,
@@ -332,56 +442,62 @@ function getEvento(eventid) {
 			console.log(evento.users);
 			$('<img id = "imagenrevento" style="width: 70%" class="foto" src="'+evento.photoURL+'" class="img-thumbnail center-block" alt="Blog Post Thumbnail">').appendTo($('#result4'));
 			
-			if (evento.assisted == false){	
-				console.log("no asisto");
-				$("#Assist").text("ASISTIRÉ!");	
-			}
-			else{
-				console.log("si asisto");
-				$("#Assist").text("NO ASISTIRÉ!");	
-			}
-			
-			$("#Assist").click(function() {
-			console.log("IDEVENTO DESPUES: " +eventid);
-			if ($("#Assist").text() == "NO ASISTIRÉ!"){
-			$("#Assist").text("ASISTIRÉ!");		
-			wontassit(id, eventid)	
-			}else{
-			$("#Assist").text("NO ASISTIRÉ!");	
-			assisttoEvent(id, eventid);	
-			}			
-			});
-			
-			for(i=0; i<5; i++) {
-				
-				var persona = JSON.stringify(evento.users[i].name);
-				console.log("STRINGIFY: " + persona);
-				$('<strong> Asistente: </strong> ' + persona + '<br>').appendTo($('#result10'));
-				
-				
-
-			} 
-			
-			console.log("pinto boton");
-			
-					
 			$.cookie('companyid', evento.companyid);
 			companyid = $.cookie('companyid');
-			getCompañia(companyid);		
+			getCompañia(companyid);	
 			
+			
+			$("#Assist").text("ASISTIRÉ!");
+			if (evento.assisted === true){	
+				console.log("si asisto");
+				$("#Assist").text("NO ASISTIRÉ!");		
+			}
+			
+			var arrayusu = new Array(evento.users);
+			var persona = new Object(evento.users);
+			if (persona.length != 0){
+				console.log("estoy dentro del if de persona length");
+				for(i=0; i<persona.length; i++) {
+									
+					console.log("estoy dentro del for");				
+					console.log(arrayusu);
+					console.log(persona[i].name);
+					
+					console.log(persona[i].id);
+					
+					id = persona[i].id;
+					
+					console.log(id);
+					
+					$('<strong class="foto '+id+'">' + persona[i].name + '</strong><br>').appendTo($('#result10'));		
+				} 
+			}else{$('<strong>Aún no hay asistentes, Anímate!!</strong><br>').appendTo($('#result10'));}
+			console.log("pinto boton");
 			
 	}).fail(function() {
 		$("#result").text("No files");
 	});
-} 
+}
+
+$("#Assist").click(function() {
+			console.log("IDEVENTO DESPUES: " + $.cookie('eventillo'));
+			if ($("#Assist").text() == "NO ASISTIRÉ!"){
+			$("#Assist").text("ASISTIRÉ!");		
+			wontassit(id, $.cookie('eventillo'))	
+			}else{
+			$("#Assist").text("NO ASISTIRÉ!");	
+			assisttoEvent(id, $.cookie('eventillo'));	
+			}			
+			});
 
 /*--------------------------------------------------------------------------------------------------------------*/
-
+/* '+fotoUsu+' */
 function getCompañia(companyid) {
 	
 	var url = API_BASE_URL + '/companies/' + companyid;
 	console.log(url);
 	$("#result2").text('');
+	$("#result200").text('');
 	
 	
 	$.ajax({
@@ -389,21 +505,54 @@ function getCompañia(companyid) {
 		type : 'GET',
 		crossDomain : true,
 		dataType : 'json',
-		contentType:'application/vnd.dsa.eventsBCN.companies+json',
+		contentType:'application/vnd.dsa.eventsBCN.companies+json',		
 		headers: {
         'X-Auth-Token':token,        
 		}, 
 	}).done(function(data, status, jqxhr) {
-
+		console.log("dentro del done");
 		var compañia = data;		
 		console.log(compañia);
 		$.cookie('namecomp', compañia.name);
-		$('<strong> Evento creado por: </strong>' + compañia.name +'<br>' ).appendTo($('#result2'));
+		console.log(compañia.id);
+		$('<strong class="foto '+compañia.id+'">'+'<strong> Evento creado por: </strong>' + compañia.name +'<br>').appendTo($('#result2'));
+		console.log("pinto el result200");
+		$('<article class="blog-item"><div class="row" id="columna"><div class="col-md-8"><img style="width: 100%;id="imagen" class="foto" src="foto" class="img-thumbnail center-block"'
+			+'alt="Blog Post Thumbnail"></a></div>'
+			+'<div class="col-md-4"><strong> Nombre: </strong> ' + compañia.name + '<br>' + '<strong> Descripción: </strong> ' + compañia.description + '<br>'		
+			+'</div></div></article>').appendTo($('#result200')); 	
+			
+		$.cookie('empresaid', compañia.id);
+		
+		
+		
+		
+		console.log("dentro del done");
+        
+		var map = new google.maps.Map( document.getElementById("gmap2"),  {
+        //console.log(empresa.latitude);
+		//console.log(empresa.longitude);
+          center: new google.maps.LatLng(empresa.latitude,empresa.longitude),
+          zoom: 16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+          panControl: false,
+          streetViewControl: false,
+          mapTypeControl: false
+          });
+          var coords = new google.maps.LatLng(empresa.latitude,empresa.longitude);
+          // Set marker also
+            marker = new google.maps.Marker({
+            position: coords,
+            map: map,
+            });
+			
+			
 			
 	}).fail(function() {
 		$("#result").text("No files");
 	});
-} 
+}
+
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
@@ -457,6 +606,7 @@ function getCompañiaporUserID() {
 	var url = API_BASE_URL + '/companies?userid=' + $.cookie('userid');
 	console.log(url);
 	$("#result").text('');	
+	$("#result200").text('');	
 	
 	$.ajax({
 		url : url,
@@ -590,15 +740,35 @@ function UpdateUser(){
     }
 
 	console.log(categoria);
-		
+
+	var s = $('#date').val();
+	if(s == ""){
+		console.log("dentro del null");
+		alert('Debe rellenar todos los campos');
+	}
+    var fields = s.split(' ');
+    var data = fields[0];
+    var hora = fields[1];
+
+    var fields2 = data.split('-');
+    var dia = fields2[0];
+	var mes = fields2[1];
+	var año = fields2[2];
+
+    var datafinal = año.concat('-',mes,'-',dia, ' ', hora);
+	
+	
+
 	var formData = new FormData();
 	formData.append("title", $('#title').val());
 	formData.append("description", $('#description').val());
-	formData.append("date", $('#date').val());
+	formData.append("date", datafinal);
+	console.log("DATA FINAL: "+ datafinal);
     formData.append("image",$("#inputFile")[0].files[0]);
     formData.append("category",categoria);
 
 	
+			
 	console.log($.cookie('empresaid'));
 
 	$.ajax({
@@ -619,10 +789,11 @@ function UpdateUser(){
 		
 		window.location.replace('Eventos.html');
 		
-		$('<div class="alert alert-success"> <strong>Ok!</strong> File Created</div>').appendTo($("#result"));
-	
-	}).fail(function() {
-		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
+	}).fail(function(jqxhr) {
+		
+		if(jqxhr.status == 500){			
+			alert('Debe rellenar todos los campos');
+			}
 	});
 
 	

@@ -27,6 +27,7 @@ $("#tipo").click(function(){
 	} 
 });
 $("#siguiente").click(function(){
+        initialize ();
 		$('#myModal3').modal("hide");		
 		createUser2();	 
 });
@@ -39,7 +40,74 @@ $("#button_createusu").on("click", function(e) {
 	createUser();
 });
 
+/*--------------------------------------------------------------------------------------------------------------*/
 
+function initialize() {
+console.log("EL INITIALIZE DE LOS HUEVOS");
+        var map = new google.maps.Map( document.getElementById("gmap"),  {
+        center: new google.maps.LatLng(41.3850639,2.1734034999999494),
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        panControl: false,
+        streetViewControl: false,
+        mapTypeControl: false
+        });
+        var coords = new google.maps.LatLng(41.3850639,2.1734034999999494);
+        // Set marker also
+          marker = new google.maps.Marker({
+          position: coords,
+          map: map,
+          title: jQuery('input[name=address]').val(),
+          });
+        //map.setCenter(coords);
+}
+
+
+
+
+
+
+
+
+ jQuery('input[name=search]').click(function() {
+      console.log("ESTO ES EL PUTO MAPA");
+          var geocoder = new google.maps.Geocoder();
+          geocoder.geocode({
+          address : jQuery('input[name=address]').val(),
+          region: 'no'
+          },
+          function(results, status) {
+              if (status.toLowerCase() == 'ok') {
+                  // Get center
+                  var coords = new google.maps.LatLng(
+                  results[0]['geometry']['location'].lat(),
+                  results[0]['geometry']['location'].lng()
+                  );
+                  jQuery('#coords1').val(coords.lat());
+                  jQuery('#coords2').val(coords.lng());
+
+                  var map = new google.maps.Map( document.getElementById("gmap"),  {
+                  center: new google.maps.LatLng(document.getElementById("coords1").value,document.getElementById("coords2").value),
+                  zoom: 16,
+                  mapTypeId: google.maps.MapTypeId.ROADMAP,
+                  panControl: false,
+                  streetViewControl: false,
+                  mapTypeControl: false
+                  });
+                  var coords = new google.maps.LatLng(document.getElementById("coords1").value,document.getElementById("coords2").value);
+                  // Set marker also
+                    marker = new google.maps.Marker({
+                    position: coords,
+                    map: map,
+                    title: jQuery('input[name=address]').val(),
+                    });
+              }
+          });
+
+
+
+        //map.setCenter(coords);
+      });
 /*--------------------------------------------------------------------------------------------------------------*/
 
 function createCompany(){
@@ -49,7 +117,7 @@ function createCompany(){
         "description" : $('#description').val(),
         "location" : $('#calle').val(),
         "latitude" : parseFloat(document.getElementById("coords1").value),
-		"longitude" : parseFloat(document.getElementById("coords1").value),
+		"longitude" : parseFloat(document.getElementById("coords2").value),
     }
 
 
@@ -76,10 +144,13 @@ function createCompany(){
 		
 		window.location.replace('Eventos.html');
 
-		$('<div class="alert alert-success"> <strong>Ok!</strong> Company Created</div>').appendTo($("#result"));
-
-	}).fail(function() {
-		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
+	}).fail(function(jqxhr) {
+		if(jqxhr.status == 500){			
+			alert('Debe rellenar todos los campos');
+			}
+		if(jqxhr.status == 409){			
+			alert('Esta empresa ya existe');
+			}
 	});
 
 
@@ -154,8 +225,8 @@ function createUser() {
 		$.removeCookie('email');
 		
 		
-		
-		$('#nombre').text('Bienvenido, ' + $.cookie('name'));
+		$.cookie('namelogin', $('#name1').val());
+		$('#nombre').text('Bienvenido, ' + $.cookie('namelogin'));
 		$.cookie('password', $('#password').val());
 		$.cookie('email', $('#email').val());
 		$.cookie('name', $('#name').val());
@@ -166,8 +237,13 @@ function createUser() {
 		
 		$('<strong> Bienvenido, </strong>' + data.name).appendTo($('#result5'));
 
-	}).fail(function() {
-		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
+	}).fail(function(jqxhr) {
+		if(jqxhr.status == 500){			
+			alert('Debe rellenar todos los campos');
+			}
+		if(jqxhr.status == 409){			
+			alert('Este usuario ya existe');
+			}
 	});
 
 }
@@ -211,12 +287,17 @@ function createUser2() {
        		$.cookie('name', $('#name1').val());
        		$.cookie('password', $('#password1').val());
        		$.cookie('email', $('#email1').val());
-       		
+       		$.cookie('namelogin', $('#name1').val());
        		$('#nombre').text('Bienvenido, ' + $.cookie('name'));
 			
 		       		
-       	}).fail(function() {
-       		$('<div class="alert alert-danger"> <strong>Oh!</strong> Error </div>').appendTo($("#result"));
+       	}).fail(function(jqxhr) {
+       		if(jqxhr.status == 500){			
+				alert('Debe rellenar todos los campos');
+			}
+			if(jqxhr.status == 409){			
+				alert('Este usuario ya existe');
+			}
        	});
 
        }
@@ -294,6 +375,7 @@ function login(login, password, complete){
 				
 				$.removeCookie('name');
 				$.cookie('name', login);
+				$.cookie('namelogin', login);
 				
 				$('#nombre').text('Bienvenido, ' + $.cookie('name'));
 														

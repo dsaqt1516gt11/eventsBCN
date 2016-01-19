@@ -47,6 +47,19 @@
 
 
 <body>
+<style type="text/css">
+	html, body { height: 100%; margin: 0; padding: 0; }
+	#map { height: 100%; }
+	#gmap {
+	width: 450px;
+	height: 350px;
+	background-color: #CCC;
+	}
+
+
+</style>
+<meta name="viewport" content="width=device-width">
+<link href='http://fonts.googleapis.com/css?family=Doppio+One' rel='stylesheet' type='text/css'>
     
     <!-- Carrousel!!!-->
 	
@@ -201,7 +214,7 @@
 						<center>
 							<label class="checkbox-inline" id="cat_registro">
 								<label class="checkbox-inline">
-									<input type="checkbox" id="cat1" value="restaurante"> Restaurante
+									<input type="checkbox" id="cat1" value="teatro"> Teatro
 								</label>
 								<label class="checkbox-inline">
 									<input type="checkbox" id="cat2" value="cine"> Cine
@@ -251,14 +264,13 @@
 						<br>
 						<div>  <input name="image2" type="file" id="inputFile2" required="required"></div>
 					</div>
+					<center>
+						<button type="button" class="btn btn-success" id="siguiente" data-toggle="modal" data-target="#myModal10">Siguiente</button>
+						<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->
+						</button>
+						<br>
+					</center>
 				</div>
-
-				<center>
-					<button type="button" class="btn btn-success" id="siguiente" data-toggle="modal" data-target="#myModal10">Siguiente</button>
-					<!-- <i class="ion-ios-briefcase-outline hidden-xs"></i>	 -->
-					</button>
-					<br>
-				</center>
 			</div>
 		</div>
 	</div>
@@ -283,63 +295,15 @@
 						<div class="input-group input-group-sm"><span class="input-group-addon">Descripción:</span> <input type="text" id="description" class="form-control"></div>
 						<br>
 						<center>
-							<div style="padding-bottom:10px;"><input id="calle" type="text" name="address" value="O. J. Brochs g 16a, Bergen" style="width:400px;border:1px solid black"><input type="button" name="search" value="Buscar"></div>
-						</center>
+							<div style="padding-bottom:10px;"><input id="calle" type="text" name="address" value="Barcelona, España" style="width:400px;border:1px solid black"><input type="button" name="search" value="Buscar"></div>
+
 						<div>
 							<input id="coords1"><input id="coords2">
 						</div>
+							<br>
 						<div id="gmap" style="width:300px; height:300px;"></div>
-
-						<script>
-
-                      jQuery(document).ready(function() {
-
-                      // Load google map
-                      var map = new google.maps.Map( document.getElementById("gmap"),  {
-                      center: new google.maps.LatLng(0,0),
-                      zoom: 2,
-                      mapTypeId: google.maps.MapTypeId.ROADMAP,
-                      panControl: false,
-                      streetViewControl: false,
-                      mapTypeControl: false
-                      });
-
-
-                      jQuery('input[name=search]').click(function() {
-
-                      var geocoder = new google.maps.Geocoder();
-                      geocoder.geocode({
-                      address : jQuery('input[name=address]').val(),
-                      region: 'no'
-                      },
-                      function(results, status) {
-                      if (status.toLowerCase() == 'ok') {
-                      // Get center
-                      var coords = new google.maps.LatLng(
-                      results[0]['geometry']['location'].lat(),
-                      results[0]['geometry']['location'].lng()
-                      );
-                      jQuery('#coords1').val(coords.lat());
-                      jQuery('#coords2').val(coords.lng());
-                      map.setCenter(coords);
-                      map.setZoom(18);
-
-                      // Set marker also
-                      marker = new google.maps.Marker({
-                      position: coords,
-                      map: map,
-                      title: jQuery('input[name=address]').val(),
-                      });
-
-                      }
-                      }
-                      );
-                      });
-
-                      });
-
-                      </script>
 						<br>
+						</center>
 					</div>
 
 					<center>
