@@ -186,7 +186,7 @@ public class UserResource {
         try {
             user.setId(id);
             user.setName(name);
-            user.setPhoto(uuid.toString());
+            user.setPhoto(uuid.toString() + ".png");
             user.setEmail(email);
             user.setCategories(categories);
             u = userDAO.updateProfile(user, role);

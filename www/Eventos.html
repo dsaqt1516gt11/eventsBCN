@@ -18,10 +18,9 @@
         <!--necessary stylesheets -->
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+        <script src="http://maps.google.com/maps/api/js"></script>
 		<script language="JavaScript" src="ts_picker.js">
 		</script>
-
 
 		
 
@@ -68,7 +67,7 @@
 						<span class="icon-bar"></span>
                     </button>
 					<a class="navbar-brand" href="index.html">
-                        <img src="assets/img/ic_launcher.png" alt="Site Logo">
+                        <img src="assets/img/logo.png" alt="Site Logo">
                     </a>					
                 </div>
 
@@ -79,7 +78,7 @@
 										
                         <li class="active"><a href="Eventos.html">Inicio</span></a></li>
                         <li><a href="FAQ.html">FAQ</a></li>
-                        <li><a href="About.html">ABOUT</a></li>						
+                        <li><a href="about.html">ABOUT</a></li>						
 						<li><a id="Ajustes" data-toggle="modal" data-target="#myModal20">AJUSTES</a></li>
                         <li><a id="nombre"></a></li> 										
 						
@@ -113,12 +112,20 @@
 			<div id="myModal5" class="modal fade" role="dialog">
 				<center>
                     <div style="width: 100%" class="modal-dialog modal-lg" id="modalevent">
-                        <article class="blog-item">						
+                        <article class="blog-item">
                             <div class="row" id="columna">
                                 <div class="col-md-8">
                                     
 									<span id="result4"></span>
                                     <h1><span id="result1"></span></h1>
+									<center><h1><span id="result2"></span></h1>
+									</center>
+
+									<br>
+									<!-- 	Botón Asistir o no asistir! -->
+									<button type="button" class="btn btn-success" id="Assist"></button>
+									<!-- 	Botón Eliminar Evento! -->
+									<button type="button" class="btn btn-danger" id="DeleteEvent" align="right">ELIMINAR EVENTO</button>
                                 </div>
                                 <div class="col-md-4">
                                     <!-- MAPA -->
@@ -127,18 +134,9 @@
 									
 									<br>
                                     <br>
-                                    <center><strong><h1>Asistentes:</strong></h1><h3 id="result10"></h3></center>
-                                    <br>
-                                <br>
-                                <center><h1><span id="result2"></span></h1>
-                                </center>
-								
-								<br>
-                                <br>
-                                <!-- 	Botón Asistir o no asistir! -->
-                                <button type="button" class="btn btn-success" id="Assist"></button>
-                                 <!-- 	Botón Eliminar Evento! -->
-                                <button type="button" class="btn btn-danger" id="DeleteEvent" align="right">ELIMINAR EVENTO</button>
+                                    <center><strong><h1>Asistentes:</h1></strong><h3 id="result10"></h3></center>
+
+
                                 </div>
                              </div>
                         </article>

@@ -1,5 +1,5 @@
-/* var API_BASE_URL = "http://147.83.7.207:8080/eventsBCN"; */
-var API_BASE_URL = "http://localhost:8080/eventsBCN";
+var API_BASE_URL = "http://147.83.7.207:8080/eventsBCN";
+/* var API_BASE_URL = "http://localhost:8080/eventsBCN"; */
 var token = $.cookie('token');
 var namecomp = $.cookie('namecomp');
 var role = $.cookie('role');
@@ -13,7 +13,7 @@ var useridASSIST;
 /*--------------------------------------------------------------------------------------------------------------*/
 
 $(document).ready(function(){	    
-   
+
    console.log("a");
    
    	getUsuPorId();
@@ -41,7 +41,8 @@ $(document).ready(function(){
 		document.getElementById('DeleteEvent').style.display = 'none';
 		console.log(role + "dentro del registered");
 		getEventos();
-		$("main").on("click", "article", function(e) {
+		
+		$("main").on("click", "img", function(e) {
 			console.log(e);
 			var arr = e.target.className.split(' ');
 			eventid = arr[1];
@@ -68,12 +69,30 @@ $(document).ready(function(){
 			window.location.replace('PerfilUsu.html');		
 			
 		});
+		
+		$("#result2").on("click", function(e) {
+		
+			$("#result200").text('');		   
+		   
+			console.log(e);		
+			var arr2 = e.target.className.split(' ');
+			companyid = arr2[1];
+			console.log(companyid);
+			console.log(arr2);
+			
+			console.log("c");				
+			console.log("d");	
+			window.location.replace('PerfilEmpresa.html');
+		
+		 
+			
+		});
 				
 	}
 	else{
 		getCompañiaporUserID();
 		
-		$("main").on("click", "article", function(e) {
+		$("main").on("click", "img", function(e) {
 			console.log(e);
 			var arr = e.target.className.split(' ');
 			var eventid = arr[1];
@@ -86,13 +105,14 @@ $(document).ready(function(){
 		
 		});
 		document.getElementById('Assist').style.display = 'none';
+		document.getElementById('Ajustes').style.display = 'none';
 		
 		$("#nombre").click(function() {
 		
-		$.removeCookie('title');
+		/* $.removeCookie('title');
 		$.removeCookie('description');
 		$.removeCookie('email');
-		getCompañiaporUserID();
+		getCompañiaporUserID(); */
 		
 		window.location.replace('PerfilEmpresa.html');		
 			
@@ -157,27 +177,7 @@ $(document).ready(function(){
 			
 		});	
 		
-		
-	$("#result2").on("click", function(e) {
-		
-		$("#result200").text('');		   
-	   
-		console.log(e);		
-		var arr2 = e.target.className.split(' ');
-		companyid = arr2[1];
-		console.log(companyid);
-		console.log(arr2);
-		
-		console.log("c");				
-		console.log("d");	
-		window.location.replace('PerfilEmpresa.html');
-		
-		 
-			
-		});
-		
-
-
+	
 });
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -207,7 +207,7 @@ function getUsuPorId() {
 			$.cookie('password', data.password);
 			$.cookie('email', data.email);			
 			$.cookie('categorias', data.categories);
-			
+            $.cookie('fotiko', data.photoURL);
 			
 			console.log($.cookie('email'));		
 				
@@ -409,8 +409,14 @@ function getEventos() {
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
-
+var eso = parseInt("0");
 function getEvento(eventid) {
+     if (eso==0){
+        initial();
+        eso++;
+        console.log("EL VALOR DE ESO: " +eso);
+    }
+
 	$.removeCookie('eventillo');
 	$.cookie('eventillo', eventid);
 	$.removeCookie('eventoid');
@@ -479,6 +485,24 @@ function getEvento(eventid) {
 	});
 }
 
+
+
+function initial() {
+console.log("EL INITIALIZE DE LOS HUEVOS");
+
+        var map = new google.maps.Map( document.getElementById('gmap2'),  {
+        center: new google.maps.LatLng(41.3850639,2.1734034999999494),
+        zoom: 16,
+        });
+        var coords = new google.maps.LatLng(41.3850639,2.1734034999999494);
+        // Set marker also
+          marker = new google.maps.Marker({
+          position: coords,
+          map: map
+          });
+        //map.setCenter(coords);
+}
+
 $("#Assist").click(function() {
 			console.log("IDEVENTO DESPUES: " + $.cookie('eventillo'));
 			if ($("#Assist").text() == "NO ASISTIRÉ!"){
@@ -517,42 +541,45 @@ function getCompañia(companyid) {
 		console.log(compañia.id);
 		$('<strong class="foto '+compañia.id+'">'+'<strong> Evento creado por: </strong>' + compañia.name +'<br>').appendTo($('#result2'));
 		console.log("pinto el result200");
-		$('<article class="blog-item"><div class="row" id="columna"><div class="col-md-8"><img style="width: 100%;id="imagen" class="foto" src="foto" class="img-thumbnail center-block"'
+		$('<article class="blog-item"><div class="row" id="columna"><div class="col-md-8"><img style="width: 100%;id="imagen" class="foto" src="'+ $.cookie('fotiko') +'" class="img-thumbnail center-block"'
 			+'alt="Blog Post Thumbnail"></a></div>'
 			+'<div class="col-md-4"><strong> Nombre: </strong> ' + compañia.name + '<br>' + '<strong> Descripción: </strong> ' + compañia.description + '<br>'		
 			+'</div></div></article>').appendTo($('#result200')); 	
 			
 		$.cookie('empresaid', compañia.id);
+		$.cookie('empresafoto', fotoUsu);
 		
 		
-		
-		
+
+		$.removeCookie('latitudetet');
+		$.cookie('latitudetet', compañia.latitude);
+		$.removeCookie('longitudetet');
+		$.cookie('longitudetet', compañia.longitude);
+		mapag();
+
 		console.log("dentro del done");
         
-		var map = new google.maps.Map( document.getElementById("gmap2"),  {
-        //console.log(empresa.latitude);
-		//console.log(empresa.longitude);
-          center: new google.maps.LatLng(empresa.latitude,empresa.longitude),
-          zoom: 16,
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          panControl: false,
-          streetViewControl: false,
-          mapTypeControl: false
-          });
-          var coords = new google.maps.LatLng(empresa.latitude,empresa.longitude);
-          // Set marker also
-            marker = new google.maps.Marker({
-            position: coords,
-            map: map,
-            });
-			
-			
-			
+
 	}).fail(function() {
 		$("#result").text("No files");
 	});
 }
-
+var test = parseInt('0');
+function mapag() {
+                  if(test==0){
+                    var map = new google.maps.Map( document.getElementById("gmap2"),  {
+                  center: new google.maps.LatLng($.cookie('latitudetet'),$.cookie('longitudetet')),
+                  zoom: 16,
+                  });
+                    test++;
+                    }
+                  var coords = new google.maps.LatLng($.cookie('latitudetet'),$.cookie('longitudetet'));
+                  // Set marker also
+                    marker = new google.maps.Marker({
+                    position: coords,
+                    map: map,
+                    });
+}
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
@@ -683,7 +710,7 @@ function UpdateUser(){
 	else{
 		formData.append("image",$("#inputFile3")[0].files[0]);
 	}
-    
+
 
 
 	console.log(formData);
@@ -704,7 +731,7 @@ function UpdateUser(){
 	}).done(function(data, status, jqxhr) {
 		
 		console.log("Usuario modificado");
-			$.removeCookie('name');			
+			$.removeCookie('name');
 			$.removeCookie('email');
 			$.removeCookie('categorias');
 		getUsuPorId();

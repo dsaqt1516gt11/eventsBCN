@@ -58,13 +58,10 @@
 					<ul class="nav navbar-nav navbar-right">
 										
                         <li><a href="Eventos.html">Inicio</span></a></li>
-                        <li><a href="FAQ.html">FAQ</a></li>
-                        <li><a href="About.html">ABOUT</a></li>						
-						<li><a id="Ajustes" data-toggle="modal" data-target="#myModal20">AJUSTES</a></li>
                         <li class="active"><a id="nombre"></a></li> 										
 						
 						<p class="navbar-text pull-right">						 
-						<button type="button" class="btn btn-success" id="CreateEvent" align="right" data-toggle="modal" data-target="#myModal22">CREAR EVENTO</button>
+						
 						<button type="button" class="btn btn-danger" id="button_logout" align="right">LOG OUT</button>		
 						</p>
                     </ul>
@@ -128,10 +125,9 @@
         <script>
 			$('#nombre').text(' Bienvenido, ' + $.cookie('name'));
 			$.cookie('empresaid');
+			$.cookie('empresafoto');
+			getCompañia($.cookie('empresaid'));
 			
-			getCompañia($.cookie('empresaid'));	
-			
-
 		</script>
 		
 		

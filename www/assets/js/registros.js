@@ -1,13 +1,12 @@
-/* var API_BASE_URL = "http://147.83.7.207:8080/eventsBCN"; */
-var API_BASE_URL = "http://localhost:8080/eventsBCN";
+var API_BASE_URL = "http://147.83.7.207:8080/eventsBCN";
+/* var API_BASE_URL = "http://localhost:8080/eventsBCN";*/
 /*--------------------------------------------------------------------------------------------------------------*/
 var token = $.cookie('token');
 
 /*--------------------------------------------------------------------------------------------------------------*/
 
 $(document).ready(function(){
-	
-	
+		
 });
 
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -225,7 +224,7 @@ function createUser() {
 		$.removeCookie('email');
 		
 		
-		$.cookie('namelogin', $('#name1').val());
+		$.cookie('namelogin', $('#name').val());
 		$('#nombre').text('Bienvenido, ' + $.cookie('namelogin'));
 		$.cookie('password', $('#password').val());
 		$.cookie('email', $('#email').val());
