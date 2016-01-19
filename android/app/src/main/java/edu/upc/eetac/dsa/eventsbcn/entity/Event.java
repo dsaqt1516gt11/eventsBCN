@@ -14,6 +14,7 @@ public class Event {
     private String description;
     private String date;
     private String photo;
+    private String photoURL;
     private String category;
     private String companyid;
     private long lastModified;
@@ -67,6 +68,14 @@ public class Event {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public String getCategory() {

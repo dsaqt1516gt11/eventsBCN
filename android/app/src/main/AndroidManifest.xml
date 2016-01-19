@@ -53,26 +53,43 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCPZab7Dtp3F9oy1o4j8SjqomBdbiMZCy0" />
 
         <activity
             android:name=".Activitys.UserListActivity"
             android:label="@string/title_activity_user_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activitys.CreateEventActivity"
             android:label="@string/title_activity_create_event"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activitys.CapturaFotoActivity"
             android:label="@string/title_activity_captura_foto"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activitys.EventsMainActivity"
             android:label="@string/title_activity_events_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activitys.UserProfileActivity"
+            android:label="@string/title_activity_user_profile"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activitys.CompanyProfileActivity"
+            android:label="@string/title_activity_company_profile"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activitys.AboutActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCPZab7Dtp3F9oy1o4j8SjqomBdbiMZCy0" />
     </application>
 
 </manifest>

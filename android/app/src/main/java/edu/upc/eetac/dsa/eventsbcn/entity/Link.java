@@ -1,12 +1,13 @@
 package edu.upc.eetac.dsa.eventsbcn.entity;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 
 /**
  * Created by juan on 6/12/15.
  */
-public class Link {
+public class Link implements Serializable {
 
     private URI uri;
     private String rel;

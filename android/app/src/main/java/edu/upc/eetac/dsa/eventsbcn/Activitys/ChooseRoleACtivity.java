@@ -28,6 +28,7 @@ public class ChooseRoleACtivity extends AppCompatActivity {
                 String role = "registered";
                 intent.putExtra("role", role);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -39,6 +40,7 @@ public class ChooseRoleACtivity extends AppCompatActivity {
                 String role = "company";
                 intent.putExtra("role", role);
                 startActivity(intent);
+                finish();
             }
         });
     }

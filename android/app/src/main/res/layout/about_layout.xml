@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="eventsBCN ha sido creada por:"
+            android:textColor="#ff616161"
+            android:textStyle="bold|italic"
+            android:textSize="20dp"
+            android:id="@+id/textAbout"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Juan Álvarez"
+            android:textColor="#ff616161"
+            android:textStyle="bold|italic"
+            android:textSize="20dp"
+            android:id="@+id/textAbout2"
+            android:gravity="center"
+            android:layout_below="@id/textAbout"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aitor Pinyeiro"
+            android:textColor="#ff616161"
+            android:textStyle="bold|italic"
+            android:textSize="20dp"
+            android:id="@+id/textAbout3"
+            android:gravity="center"
+            android:layout_below="@id/textAbout2"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Andrea Garós"
+            android:textColor="#ff616161"
+            android:textStyle="bold|italic"
+            android:textSize="20dp"
+            android:id="@+id/textAbout4"
+            android:gravity="center"
+            android:layout_below="@id/textAbout3"/>
+
+
+</RelativeLayout>

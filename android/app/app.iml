@@ -64,6 +64,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/build/.DS_Store" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
@@ -76,6 +77,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/2.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
@@ -92,20 +94,21 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-2.4.0-b31" level="project" />
+    <orderEntry type="library" exported="" name="circleimageview-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="jersey-guava-2.22.1" level="project" />
     <orderEntry type="library" exported="" name="javax.ws.rs-api-2.0.1" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="javax.annotation-api-1.2" level="project" />
     <orderEntry type="library" exported="" name="mimepull-1.9.6" level="project" />
-    <orderEntry type="library" exported="" name="hk2-locator-2.4.0-b31" level="project" />
     <orderEntry type="library" exported="" name="hk2-utils-2.4.0-b31" level="project" />
+    <orderEntry type="library" exported="" name="hk2-locator-2.4.0-b31" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="javassist-3.18.1-GA" level="project" />
     <orderEntry type="library" exported="" name="aopalliance-repackaged-2.4.0-b31" level="project" />
     <orderEntry type="library" exported="" name="jersey-client-2.22.1" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-android-4.3.5" level="project" />
     <orderEntry type="library" exported="" name="hk2-api-2.4.0-b31" level="project" />
     <orderEntry type="library" exported="" name="osgi-resource-locator-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="httpclient-android-4.3.5" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-maps-8.3.0" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.3.6" level="project" />

@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(LoginActivity.this, ChooseRoleACtivity.class));
-                startActivity(new Intent(LoginActivity.this, CapturaFotoActivity.class));
+                startActivity(new Intent(LoginActivity.this, ChooseRoleACtivity.class));
             }
         });
 
@@ -133,6 +133,11 @@ public class LoginActivity extends AppCompatActivity  {
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     private boolean isUsernameValid(String username) {
@@ -220,9 +225,11 @@ public class LoginActivity extends AppCompatActivity  {
 
 
             if (result) {
+
                 Intent intent= new Intent(LoginActivity.this, EventsMainActivity.class);
                 intent.putExtra("role", result);
                 startActivity(intent);
+                finish();
             } else {
                 Toast error = Toast.makeText(getApplicationContext(),"Nombre o password Incorrecto", Toast.LENGTH_SHORT);
                 error.show();

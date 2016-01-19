@@ -5,8 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -19,11 +22,13 @@ import edu.upc.eetac.dsa.eventsbcn.entity.EventCollection;
 public class EventListAdapter extends BaseAdapter {
     private EventCollection eventCollection;
     private LayoutInflater layoutInflater;
+    private Context mcontext;
 
 
     public EventListAdapter(Context context, EventCollection eventCollection){
         layoutInflater = LayoutInflater.from(context);
         this.eventCollection = eventCollection;
+        this.mcontext = context;
 
     }
 
@@ -56,10 +61,12 @@ public class EventListAdapter extends BaseAdapter {
         String title = eventCollection.getEvents().get(position).getTitle();
         String date = eventCollection.getEvents().get(position).getDate();
         String category = eventCollection.getEvents().get(position).getCategory();
+        String photo = eventCollection.getEvents().get(position).getPhotoURL();
 
         viewHolder.textViewtitle.setText(title);
         viewHolder.textViewdate.setText(date);
         viewHolder.textViewcategory.setText(category);
+        Picasso.with(mcontext).load(photo).into(viewHolder.imageViewphoto);
         return convertView;
     }
 
@@ -70,6 +77,7 @@ public class EventListAdapter extends BaseAdapter {
         TextView textViewtitle;
         TextView textViewdate;
         TextView textViewcategory;
+        ImageView imageViewphoto;
 
         ViewHolder(View row){
             this.textViewtitle = (TextView) row
@@ -78,6 +86,7 @@ public class EventListAdapter extends BaseAdapter {
                     .findViewById(R.id.date);
             this.textViewcategory = (TextView) row
                     .findViewById(R.id.category);
+            this.imageViewphoto = (ImageView) row.findViewById(R.id.event_row_photo);
         }
     }
 

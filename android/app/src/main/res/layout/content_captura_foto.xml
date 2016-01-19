@@ -12,9 +12,15 @@
     tools:context="edu.upc.eetac.dsa.eventsbcn.Activitys.CapturaFotoActivity"
     tools:showIn="@layout/activity_captura_foto">
 
+    <!-- REgisterUser progress -->
+    <ProgressBar android:id="@+id/captura_foto_progress" style="?android:attr/progressBarStyleLarge"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginBottom="8dp" android:visibility="gone"  />
+
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:id="@+id/form_captura_foto">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -24,7 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FOTO"
+            android:text="ELIGE TU FOTO"
             android:layout_margin="3dp"
             android:textSize="30sp"
             android:textStyle="bold"

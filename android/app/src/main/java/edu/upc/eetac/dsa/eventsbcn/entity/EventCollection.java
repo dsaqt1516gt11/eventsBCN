@@ -10,16 +10,16 @@ import javax.ws.rs.core.*;
  */
 public class EventCollection {
 
-    private List<javax.ws.rs.core.Link> links;
+    private List<Link> links;
     private long newestTimestamp;
     private long oldestTimestamp;
     private List<Event> events = new ArrayList<>();
 
-    public List<javax.ws.rs.core.Link> getLinks() {
+    public List<Link> getLinks() {
         return links;
     }
 
-    public void setLinks(List<javax.ws.rs.core.Link> links) {
+    public void setLinks(List<Link> links) {
         this.links = links;
     }
 

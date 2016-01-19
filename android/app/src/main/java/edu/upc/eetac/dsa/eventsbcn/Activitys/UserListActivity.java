@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import java.util.List;
 
 import edu.upc.eetac.dsa.eventsbcn.R;
 import edu.upc.eetac.dsa.eventsbcn.client.EventListAdapter;
+import edu.upc.eetac.dsa.eventsbcn.client.EventsBCNClient;
 import edu.upc.eetac.dsa.eventsbcn.client.UserListAdapter;
 import edu.upc.eetac.dsa.eventsbcn.entity.User;
 
@@ -42,6 +44,16 @@ public class UserListActivity extends AppCompatActivity {
         ListView list = (ListView)findViewById(R.id.userlist);
         userListAdapter = new UserListAdapter(this, asistentes);
         list.setAdapter(userListAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(UserListActivity.this, UserProfileActivity.class);
+                String uri = EventsBCNClient.getLink(asistentes.get(position).getLinks(),"self").getUri().toString();
+                intent.putExtra("uri", uri);
+                startActivity(intent);
+            }
+        });
 
 
     }

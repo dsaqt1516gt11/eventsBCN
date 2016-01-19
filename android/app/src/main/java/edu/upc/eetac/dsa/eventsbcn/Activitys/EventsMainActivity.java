@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+
+
 import edu.upc.eetac.dsa.eventsbcn.R;
 import edu.upc.eetac.dsa.eventsbcn.client.EventListAdapter;
 import edu.upc.eetac.dsa.eventsbcn.client.EventsBCNClient;
@@ -36,11 +40,14 @@ public class EventsMainActivity extends AppCompatActivity
     private final static String TAG = EventsMainActivity.class.toString();
     private GetEventsTask mGetEventsTask = null;
     private DeleteEventTask mDeleteEventTask = null;
-
+    private LogoutTask mLogoutTask = null;
+    private GetUserTask mGetUserTask = null;
     private EventCollection events = new EventCollection();
     private EventListAdapter adapter = null;
     private String uri_delete=null;
+    private String uri_login=null;
     private String role=null;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +57,9 @@ public class EventsMainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         role = EventsBCNClient.getInstance().isUserInRole();
         System.out.println("ROL      "+role);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
-
+        // BOTON DE CREAR EVENTO
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.createEvent);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,15 +76,37 @@ public class EventsMainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+        ////////////////
 
         // Execute AsyncTask
         mGetEventsTask = new GetEventsTask();
         mGetEventsTask.execute((Void) null);
 
+        mGetUserTask = new GetUserTask();
+        mGetUserTask.execute((Void) null);
+
         // set list adapter
         final ListView list = (ListView)findViewById(R.id.list_events);
         adapter = new EventListAdapter(this, events);
         list.setAdapter(adapter);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        events.getEvents().clear();
+                        adapter.notifyDataSetChanged();
+                        mGetEventsTask = new GetEventsTask();
+                        mGetEventsTask.execute((Void) null);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                },2500);
+
+            }
+        });
 
         /// set list OnItemClick listener
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,6 +119,7 @@ public class EventsMainActivity extends AppCompatActivity
             }
         });
 
+        // MUESTRA WIDGETS EN FUNCION DEL ROL
         if(role.equals("company")) {
             getSupportActionBar().setTitle("Tus Eventos Creados");
             // PARA BORRAR EVENTOS ( SOLO COMPAÑIA)
@@ -127,13 +158,24 @@ public class EventsMainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            AlertDialog.Builder builder = new AlertDialog.Builder(EventsMainActivity.this);
+            builder.setTitle("Salir de EventsBCN").setMessage("Estás seguro?").setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    mLogoutTask = new LogoutTask();
+                    mLogoutTask.execute((Void) null);
+                    finish();
+
+                }
+            }).setNegativeButton("No", null).show();
+            //super.onBackPressed();
         }
     }
 
@@ -153,7 +195,10 @@ public class EventsMainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(this, AboutActivity.class);
+            startActivity(i);
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -165,17 +210,35 @@ public class EventsMainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_eventsmain) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (id == R.id.nav_userprofile) {
+            if(role.equals("registered")){
+                Intent intent = new Intent(EventsMainActivity.this,UserProfileActivity.class);
+                intent.putExtra("uri",uri_login);
+                startActivity(intent);
+            }
+            else {
+                String uri_comp = EventsBCNClient.getInstance().getUriCompany();
+                Intent intent = new Intent(EventsMainActivity.this,CompanyProfileActivity.class);
+                intent.putExtra("uri",uri_comp);
+                startActivity(intent);
+            }
 
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_edituser) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_logout) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(EventsMainActivity.this);
+            builder.setTitle("Salir de EventsBCN").setMessage("Estás seguro?").setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    mLogoutTask = new LogoutTask();
+                    mLogoutTask.execute((Void) null);
+                    finish();
 
-        } else if (id == R.id.nav_send) {
+                }
+            }).setNegativeButton("No", null).show();
 
         }
 
@@ -185,6 +248,8 @@ public class EventsMainActivity extends AppCompatActivity
     }
 
 
+
+
     class GetEventsTask extends AsyncTask<Void, Void, String> {
 
 
@@ -192,7 +257,7 @@ public class EventsMainActivity extends AppCompatActivity
         protected String doInBackground(Void... params) {
             String jsonEventCollection = null;
             try{
-                jsonEventCollection = EventsBCNClient.getInstance().getEvents();
+                jsonEventCollection = EventsBCNClient.getInstance().getEvents(null);
             }catch(EventsBCNClientException e){
                 // TODO: Handle gracefully
                 Log.d(TAG, e.getMessage());
@@ -242,4 +307,46 @@ public class EventsMainActivity extends AppCompatActivity
         }
 
     }
+
+    public class GetUserTask extends AsyncTask<Void,Void,String>{
+
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String result = EventsBCNClient.getInstance().getUserByLogin();
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+
+            uri_login = result;
+            System.out.println("URI DEL LOGIN       "+uri_login);
+
+        }
+    }
+
+    public class LogoutTask extends AsyncTask<Void,Void,Boolean>{
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            boolean result = EventsBCNClient.getInstance().logout();
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            if(result){
+                Intent intent = new Intent(EventsMainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+            else Toast.makeText(EventsMainActivity.this, "Error, intentalo de nuevo",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }

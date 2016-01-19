@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -32,8 +33,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     public CheckBox cat_discoteca;
     public CheckBox cat_teatro;
     private String role;
-    private RegisterUserTask mRegisterTask = null;
-    public List<String> categorias;
+    public ArrayList<String> categorias;
 
 
 
@@ -46,12 +46,13 @@ public class RegisterUserActivity extends AppCompatActivity {
         categorias = new ArrayList<>();
 
         role = (String) getIntent().getExtras().get("role");
+        System.out.println("ROL EN RESGITERUSER        "+role);
 
 
         nombre = (EditText) findViewById(R.id.Username);
         email = (EditText) findViewById(R.id.Email);
         password = (EditText) findViewById(R.id.Pass);
-        photo = (EditText) findViewById(R.id.Photo);
+
 
         cat_bar = (CheckBox) findViewById(R.id.checkbox_bar);
         cat_discoteca = (CheckBox) findViewById(R.id.checkbox_discoteca);
@@ -93,7 +94,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             categorias.add("bar");
         if(cat_cine.isChecked())
             categorias.add("cine");
-    }
+   }
 
     public void registrar() {
         System.out.println("entrooooo");
@@ -101,65 +102,29 @@ public class RegisterUserActivity extends AppCompatActivity {
         System.out.println(mName);
         String mPass = password.getText().toString();
         String mMail = email.getText().toString();
-        String mFoto = photo.getText().toString();
         System.out.println("youuuu");
+        if(mName.equals("")||mPass.equals("")||mMail.equals("")||categorias.size()==0){
+            Toast.makeText(RegisterUserActivity.this, "Faltan datos por rellenar",
+                    Toast.LENGTH_SHORT).show();
+            categorias = new ArrayList<>();
 
+        }
+        else {
+            Intent intent = new Intent(RegisterUserActivity.this, CapturaFotoActivity.class);
+            intent.putExtra("nombre", mName);
+            intent.putExtra("pass", mPass);
+            intent.putExtra("mail", mMail);
+            intent.putStringArrayListExtra("categorias", categorias);
+            intent.putExtra("role", role);
+            startActivity(intent);
+            
+        }
 
-
-        mRegisterTask = new RegisterUserTask(mName, mPass, mMail, mPass, categorias, role);
-        mRegisterTask.execute((Void) null);
+        //mRegisterTask = new RegisterUserTask(mName, mPass, mMail, mPass, categorias, role);
+        //mRegisterTask.execute((Void) null);
 
 
     }
 
-    public class RegisterUserTask extends AsyncTask<Void, Void, Boolean> {
-        String name;
-        String pass;
-        String mail;
-        String foto;
-        List<String> categories;
-        String role;
 
-
-        public RegisterUserTask(String name, String pass, String mail, String foto, List<String> categories, String role) {
-            this.name = name;
-            this.pass = pass;
-            this.mail = mail;
-            this.foto = foto;
-            this.categories = categories;
-            this.role = role;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-            EventsBCNClient client = EventsBCNClient.getInstance();
-            boolean result = false;
-            try {
-                result = client.registerUser(name, pass, mail, foto, categories, role);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-
-            return result;
-
-
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mRegisterTask = null;
-            //showProgress(false);
-
-            if (success) {
-                if(role.equals("registered"))
-                startActivity(new Intent(RegisterUserActivity.this, EventsMainActivity.class));
-                else startActivity(new Intent(RegisterUserActivity.this,RegisterCompanyActivity.class));
-            } else {
-                System.out.println("error");
-            }
-        }
-
-    }
 }

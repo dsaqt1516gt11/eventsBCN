@@ -43,8 +43,8 @@ import edu.upc.eetac.dsa.eventsbcn.entity.User;
  */
 public class EventsBCNClient {
 
-    private final static String BASE_URI = "http://192.168.1.132:8080/eventsBCN";
-    //private final static String BASE_URI = "http://147.83.7.207:8080/eventsBCN";
+    //private final static String BASE_URI = "http://192.168.1.134:8080/eventsBCN";
+    private final static String BASE_URI = "http://147.83.7.207:8080/eventsBCN";
     private static EventsBCNClient instance;
     private Root root;
     private ClientConfig clientConfig = null;
@@ -52,6 +52,7 @@ public class EventsBCNClient {
     private AuthToken authToken = null;
     private Company comp = null;
     private Event evt =null;
+    private User user= null;
     private final static String TAG = EventsBCNClient.class.toString();
     private Context context;
 
@@ -92,25 +93,23 @@ public class EventsBCNClient {
         return null;
     }
 
-    public boolean registerUserImage(File bin){
+    public int registerUserImage(String name,String pass,String mail,List<String> categories,String role,File bin){
 
-
-        String name ="foto8";
-        String pass ="123";
-        String mail="aaaaa2486846a@a";
-        String category= "cine";
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
 
         formDataMultiPart.field("name", name);
-        formDataMultiPart.field("password",pass);
+        formDataMultiPart.field("password", pass);
         formDataMultiPart.field("email", mail);
-        formDataMultiPart.field("categories",category);
+        for(String category : categories) {
+            System.out.println("CATEGORIAS       "+category);
+            formDataMultiPart.field("categories", category);
+        }
         formDataMultiPart.bodyPart(new FileDataBodyPart("image", bin, MediaType.APPLICATION_OCTET_STREAM_TYPE));
 
 
 
 
-        String registerUserUri = getLink(root.getLinks(),"create-user").getUri().toString()+"?role=registered";
+        String registerUserUri = getLink(root.getLinks(),"create-user").getUri().toString()+"?role="+role;
         System.out.println(registerUserUri);
         WebTarget target = client.target(registerUserUri);
         Response response = target.request().post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA_TYPE),Response.class);
@@ -120,48 +119,40 @@ public class EventsBCNClient {
             authToken = (new Gson()).fromJson(json, AuthToken.class);
             System.out.println(authToken.getRole());
             Log.d(TAG,authToken.toString());
-            return true;
+            return 1;
         }
-        else return false;
+        else if(response.getStatus()== Response.Status.CONFLICT.getStatusCode()) return -1;
+        else return 0;
 
     }
 
-    public boolean registerUser(String name,String pass,String mail,String photo,List<String> categories,String role) throws JSONException {
-        //String [] categories = {"cine","teatro"};
-        User user = new User();
-        user.setName(name);
-        user.setPassword(pass);
-        user.setEmail(mail);
-        user.setPhoto(photo);
-        user.setCategories(categories);
 
-        String registerUserUri = getLink(root.getLinks(),"create-user").getUri().toString()+"?role="+role;
-        System.out.println(registerUserUri);
-        WebTarget target = client.target(registerUserUri);
-        System.out.println(user.getPassword());
-        System.out.println(user.getCategories());
-        String json = target.request().post(Entity.entity((new Gson().toJson(user)), EventsBCNMediaType.EVENTSBCN_USER),String.class);
-        authToken = (new Gson()).fromJson(json, AuthToken.class);
-        Log.d(TAG, json);
-        return true;
 
-    }
-
-    public boolean registerCompany(String name, String description, String location, Float latitude, Float longitud ){
+    public int registerCompany(String name, String description, String location, Float latitude, Float longitud ){
         Company company = new Company();
         company.setName(name);
         company.setDescription(description);
         company.setLocation(location);
         company.setLatitude(latitude);
         company.setLongitude(longitud);
+        System.out.println(authToken.getUserid());
         company.setUserid(authToken.getUserid());
 
-        String uri = BASE_URI+"/companies";
+        //String uri = BASE_URI+"/companies";
+        String uri = getLink(root.getLinks(),"create-company").getUri().toString();
         //String registerCompanyUri = getLink(root.getLinks(),"create-company").getUri().toString();
         WebTarget target = client.target(uri);
-        String jsonCompany = target.request().header("X-Auth-Token", authToken.getToken()).post(Entity.entity((new Gson().toJson(company)), EventsBCNMediaType.EVENTSBCN_COMPANY), String.class);
-        comp = (new Gson()).fromJson(jsonCompany,Company.class);
-        return true;
+        Response response = target.request().header("X-Auth-Token", authToken.getToken()).post(Entity.entity((new Gson().toJson(company)), EventsBCNMediaType.EVENTSBCN_COMPANY), Response.class);
+        System.out.println("REGISTRACOMPAÑIA             "+response.getStatus());
+        if (response.getStatus() == Response.Status.OK.getStatusCode()){
+            String jsonCompany = response.readEntity(String.class);
+            comp = (new Gson()).fromJson(jsonCompany, Company.class);
+            System.out.println(comp.getName());
+            Log.d(TAG,comp.toString());
+            return 1;
+        }
+        else if(response.getStatus()== Response.Status.CONFLICT.getStatusCode()) return -1;
+        else return 0;
     }
 
     public boolean login(String username, String password) throws EventsBCNClientException {
@@ -191,19 +182,64 @@ public class EventsBCNClient {
         }
     }
 
-    //public String getEventsByCompany()
+    public boolean logout(){
+        String uri = EventsBCNClient.getLink(authToken.getLinks(), "logout").getUri().toString();
+        WebTarget target = client.target(uri);
+        Response response = target.request().header("X-Auth-Token", authToken.getToken()).delete();
+        System.out.println(response.getStatus());
+        return true;
+    }
 
-
-
-    public String getEvents() throws EventsBCNClientException {
-
-        String uri;
-        String role = authToken.getRole();
-        if(role.equals("registered")){
-            uri = getLink(authToken.getLinks(), "events").getUri().toString();
-            Log.d(TAG,uri);
+    public boolean getCompanyByName(String name){
+        String uri = getLink(root.getLinks(),"create-company").getUri().toString()+"/search?name="+name;
+        Log.d(TAG,uri);
+        WebTarget target = client.target(uri);
+        Response response = target.request().get();
+        System.out.println(response.getStatus());
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            return true;
         }
-        else uri = getLink(comp.getLinks(), "companyevents").getUri().toString();
+        else return false;
+
+    }
+
+    public String getUserByLogin(){
+        String uri = getLink(authToken.getLinks(),"user-profile").getUri().toString();
+        Log.d(TAG,uri);
+        WebTarget target = client.target(uri);
+        Response response = target.request().header("X-Auth-Token", authToken.getToken()).get();
+        System.out.println(response.getStatus());
+        if(response.getStatus() == Response.Status.OK.getStatusCode()){
+            String json = response.readEntity(String.class);
+            user = (new Gson()).fromJson(json, User.class);
+            String uri2 = getLink(user.getLinks(),"self").getUri().toString();
+            return uri2;
+
+        }
+        return null;
+    }
+
+    public String getEventsByAssist(String uri){
+        //String uri = getLink(user.getLinks(),"event-assist").getUri().toString();
+        WebTarget target = client.target(uri);
+        Response response = target.request().header("X-Auth-Token",authToken.getToken()).get();
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+            System.out.println(response.getStatus());
+            return response.readEntity(String.class);
+        }else
+            return null;
+    }
+
+    public String getEvents(String uri) throws EventsBCNClientException {
+
+        System.out.println("URI VALEEEEEEEEEE    " + uri);
+        String role = authToken.getRole();
+        if(uri==null) {
+            if (role.equals("registered")) {
+                uri = getLink(authToken.getLinks(), "events").getUri().toString();
+                Log.d(TAG, uri);
+            } else uri = getLink(comp.getLinks(), "companyevents").getUri().toString();
+        }
 
         WebTarget target = client.target(uri);
         System.out.println(authToken.getToken());
@@ -228,8 +264,21 @@ public class EventsBCNClient {
 
     }
 
-    public String getCompanyById(String id) throws EventsBCNClientException{
-        WebTarget target = client.target(BASE_URI + "/companies/" + id);
+    public String getUser(String uri) throws EventsBCNClientException {
+        System.out.println(uri);
+        WebTarget target = client.target(uri);
+        Response response = target.request().header("X-Auth-Token", authToken.getToken()).get();
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+
+            return response.readEntity(String.class);
+        }else
+            throw  new EventsBCNClientException((response.readEntity(String.class)));
+
+    }
+
+    public String getCompanyById(String uri) throws EventsBCNClientException{
+        System.out.println("ENTRO POR EL EVENTS DETAIL");
+        WebTarget target = client.target(uri);
         Response response = target.request().header("X-Auth-Token",authToken.getToken()).get();
         if(response.getStatus() == Response.Status.OK.getStatusCode()) {
 
@@ -240,7 +289,8 @@ public class EventsBCNClient {
     }
 
     public String getCompanyByUserid() throws EventsBCNClientException{
-        String uri =BASE_URI +"/companies?userid="+authToken.getUserid();
+        //String uri =BASE_URI +"/companies?userid="+authToken.getUserid();
+        String uri = getLink(root.getLinks(),"create-company").getUri().toString()+"?userid="+authToken.getUserid();
         System.out.println(uri);
         String companyid = null;
         WebTarget target = client.target(uri);
@@ -257,34 +307,45 @@ public class EventsBCNClient {
 
     }
 
-    public boolean createEvent(String title,String description,String photo,String category,String date,String companyid){
-        Event event = new Event();
+    public boolean createEvent(String title,String description,String category,String date,String companyid,File image){
+
         System.out.println(title);
         System.out.println(description);
-        System.out.println(photo);
         System.out.println(category);
         System.out.println(date);
-        System.out.println(" LA COMPAÑIA DEL METODO!     "+companyid);
+        System.out.println(" LA COMPAÑIA DEL METODO!     " + companyid);
 
-        event.setTitle(title);
-        event.setDescription(description);
-        event.setPhoto(photo);
-        event.setCategory(category);
-        event.setDate(date);
-        event.setCompanyid(companyid);
+        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
 
-        WebTarget target = client.target(BASE_URI+"/companies/"+companyid+"/events");
-        Response response = target.request().header("X-Auth-Token", authToken.getToken()).post(Entity.entity((new Gson().toJson(event)), EventsBCNMediaType.EVENTSBCN_EVENT), Response.class);
+        formDataMultiPart.field("title", title);
+        formDataMultiPart.field("description", description);
+        formDataMultiPart.field("category", category);
+        formDataMultiPart.field("date", date);
+        formDataMultiPart.field("companyid", companyid);
+        formDataMultiPart.bodyPart(new FileDataBodyPart("image", image, MediaType.APPLICATION_OCTET_STREAM_TYPE));
+
+
+        System.out.println(comp.getName());
+        String uri = getLink(comp.getLinks(),"crear-evento").getUri().toString();
+        WebTarget target = client.target(uri);
+        Response response = target.request().header("X-Auth-Token", authToken.getToken()).post(Entity.entity(formDataMultiPart, MediaType.MULTIPART_FORM_DATA_TYPE), Response.class);
         System.out.println(response.getStatus());
-        System.out.println(response.readEntity(String.class));
-        //evt= new Gson().fromJson(jsonEvent,Event.class);
-        return true;
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+
+            return true;
+        }
+        return false;
+
+
+
 
     }
 
-    public boolean assistEvent(String companyid, String eventid){
-        System.out.println("ID COMPAÑIA---------"+companyid+"    ID EVENTO-------"+eventid);
-        WebTarget target = client.target(BASE_URI + "/companies/"+companyid+"/events/"+eventid+"/assist");
+    public boolean assistEvent(String uri){
+        //System.out.println("ID COMPAÑIA---------"+companyid+"    ID EVENTO-------"+eventid);
+        //WebTarget target = client.target(BASE_URI + "/companies/"+companyid+"/events/"+eventid+"/assist");
+        Log.d(TAG,uri);
+        WebTarget target = client.target(uri);
         Response response = target.request().header("X-Auth-Token",authToken.getToken()).post(null, Response.class);
         System.out.println(response.getStatus());
         if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
@@ -294,8 +355,10 @@ public class EventsBCNClient {
 
     }
 
-    public boolean wontAssistEvent(String companyid, String eventid){
-        WebTarget target = client.target(BASE_URI + "/companies/"+companyid+"/events/"+eventid+"/wontassist");
+    public boolean wontAssistEvent(String uri){
+        Log.d(TAG,uri);
+        //WebTarget target = client.target(BASE_URI + "/companies/"+companyid+"/events/"+eventid+"/wontassist");
+        WebTarget target = client.target(uri);
         Response response = target.request().header("X-Auth-Token",authToken.getToken()).delete();
         if(response.getStatus() == Response.Status.NO_CONTENT.getStatusCode()) {
 
@@ -319,6 +382,15 @@ public class EventsBCNClient {
 
         return authToken.getRole();
 
+    }
+
+    public String getUriCompany(){
+
+        return getLink(comp.getLinks(),"self").getUri().toString();
+    }
+
+    public String getUserUri(){
+        return getLink(user.getLinks(),"self").getUri().toString();
     }
 
 

@@ -10,7 +10,7 @@ import javax.ws.rs.core.Link;
  * Created by juan on 8/12/15.
  */
 public class User implements Serializable {
-    private List<javax.ws.rs.core.Link> links;
+    private List<edu.upc.eetac.dsa.eventsbcn.entity.Link> links;
     private String id;
     private String name;
     private String password;
@@ -48,11 +48,11 @@ public class User implements Serializable {
         this.categories = categories;
     }
 
-    public List<Link> getLinks() {
+    public List<edu.upc.eetac.dsa.eventsbcn.entity.Link> getLinks() {
         return links;
     }
 
-    public void setLinks(List<Link> links) {
+    public void setLinks(List<edu.upc.eetac.dsa.eventsbcn.entity.Link> links) {
         this.links = links;
     }
 

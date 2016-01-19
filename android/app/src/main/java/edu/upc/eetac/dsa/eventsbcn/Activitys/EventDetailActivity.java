@@ -1,5 +1,6 @@
 package edu.upc.eetac.dsa.eventsbcn.Activitys;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -53,6 +56,7 @@ public class EventDetailActivity extends AppCompatActivity  {
     private TextView asistants;
     private TextView company_name;
     private TextView company_descripction;
+    private ImageView imagen_evento;
     private String uri;
     private GoogleMap nMap;
     private Float latitude;
@@ -60,6 +64,8 @@ public class EventDetailActivity extends AppCompatActivity  {
     private String companyid;
     private Button asistencia;
     private List<User> asistentes;
+    private String role;
+    private Context context;
 
 
 
@@ -71,6 +77,8 @@ public class EventDetailActivity extends AppCompatActivity  {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
+        context=this;
+        role = EventsBCNClient.getInstance().isUserInRole();
 
         uri = (String) getIntent().getExtras().get("uri");
 
@@ -90,11 +98,20 @@ public class EventDetailActivity extends AppCompatActivity  {
 
         company_descripction = (TextView) findViewById(R.id.Company_descripcion);
 
+        imagen_evento = (ImageView) findViewById(R.id.photo_detail);
+
+
+
+
+
         // Execute AsyncTask
         mGetEventTask = new GetEventTask(null);
         mGetEventTask.execute((Void) null);
 
+
+
         asistencia = (Button) findViewById(R.id.assist_button);
+        if(role.equals("company")) asistencia.setVisibility(View.GONE);
         asistencia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +131,16 @@ public class EventDetailActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 Intent intent = new Intent(EventDetailActivity.this,UserListActivity.class);
                 intent.putExtra("asistentes", (Serializable) asistentes);
+                startActivity(intent);
+            }
+        });
+
+        company_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri = EventsBCNClient.getLink(event.getLinks(),"company-profile").getUri().toString();
+                Intent intent = new Intent(EventDetailActivity.this,CompanyProfileActivity.class);
+                intent.putExtra("uri",uri);
                 startActivity(intent);
             }
         });
@@ -155,8 +182,9 @@ public class EventDetailActivity extends AppCompatActivity  {
         protected String doInBackground(Void... params) {
             String jsoncompany = null;
             try{
+                String uri = EventsBCNClient.getLink(event.getLinks(),"company-profile").getUri().toString();
                 System.out.println("ID COMPAÑIA EN ASYNCTASK"+ companyid);
-                jsoncompany = EventsBCNClient.getInstance().getCompanyById(companyid);
+                jsoncompany = EventsBCNClient.getInstance().getCompanyById(uri);
             }catch(EventsBCNClientException e){
                 // TODO: Handle gracefully
                 Log.d(TAG, e.getMessage());
@@ -219,6 +247,7 @@ public class EventDetailActivity extends AppCompatActivity  {
             companyid = event.getCompanyid();
             asistentes = event.getUsers();
             asistants.setText(asistentes.size()+" Asistentes");
+            Picasso.with(context).load(event.getPhotoURL()).into(imagen_evento);
             System.out.println("ID COMPAÑIA" + companyid);
             System.out.println("ASISTO?_______" + event.isAssisted());
             if(event.isAssisted()==true) asistencia.setText("DEJAR DE ASISTIR");
@@ -242,13 +271,19 @@ public class EventDetailActivity extends AppCompatActivity  {
         @Override
         protected Boolean doInBackground(Void... params) {
             boolean success;
-            success = EventsBCNClient.getInstance().assistEvent(companyid,event.getId());
+            String uri = EventsBCNClient.getLink(event.getLinks(),"assist").getUri().toString();
+            success = EventsBCNClient.getInstance().assistEvent(uri);
             return success;
         }
 
         @Override
         protected void onPostExecute(Boolean success){
-            if(success) asistencia.setText("DEJAR DE ASISTIR");
+            if(success){
+                asistencia.setText("DEJAR DE ASISTIR");
+                // Execute AsyncTask
+                mGetEventTask = new GetEventTask(null);
+                mGetEventTask.execute((Void) null);
+            }
             else {
                 Toast error = Toast.makeText(getApplicationContext(),"Error, intentelo mas tarde", Toast.LENGTH_SHORT);
                 error.show();
@@ -266,14 +301,20 @@ public class EventDetailActivity extends AppCompatActivity  {
         @Override
         protected Boolean doInBackground(Void... params) {
             boolean success;
-            success = EventsBCNClient.getInstance().wontAssistEvent(companyid, event.getId());
+            String uri = EventsBCNClient.getLink(event.getLinks(),"wontassist").getUri().toString();
+            success = EventsBCNClient.getInstance().wontAssistEvent(uri);
             System.out.println("ID COMPAÑIA---------"+companyid+"    ID EVENTO-------"+event.getId());
             return success;
         }
 
         @Override
         protected void onPostExecute(Boolean success){
-            if(success) asistencia.setText("ASISTIR");
+            if(success) {
+                asistencia.setText("ASISTIR");
+                // Execute AsyncTask
+                mGetEventTask = new GetEventTask(null);
+                mGetEventTask.execute((Void) null);
+            }
             else {
                 Toast error = Toast.makeText(getApplicationContext(),"Error, intentelo mas tarde", Toast.LENGTH_SHORT);
                 error.show();
